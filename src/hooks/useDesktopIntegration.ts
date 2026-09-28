@@ -29,7 +29,6 @@ export function useDesktopIntegration(options: DesktopIntegrationOptions) {
   useEffect(() => {
     let disposed = false;
     let dragging = false;
-    let latestPosition: { x: number; y: number } | null = null;
     const unlisteners: Array<() => void> = [];
     const previewPlacement = async (position: { x: number; y: number }) => {
       try {
@@ -39,28 +38,30 @@ export function useDesktopIntegration(options: DesktopIntegrationOptions) {
         return placement;
       } catch { return "free" as const; }
     };
-    const onDragStart = () => { dragging = true; latestPosition = null; };
+    const onDragStart = () => { dragging = true; };
     const onDragEnd = () => {
       dragging = false;
       void (async () => {
         try {
-          const position = latestPosition ?? await getCurrentWindow().outerPosition();
+          const position = await getCurrentWindow().outerPosition();
           const placement = await previewPlacement(position);
+          await hideSnapOverlay();
+          if (placement === "free") await setWidgetDisplayMode("expanded", true);
+          else await applyWidgetPlacement(placement);
           if (!disposed) setWidgetPlacement(placement);
-        } finally { await hideSnapOverlay(); }
+        } catch { await hideSnapOverlay(); }
       })();
     };
     window.addEventListener("widget-native-drag-start", onDragStart);
-    window.addEventListener("widget-native-drag-end", onDragEnd);
     void (async () => {
       await restoreWidgetPosition(loadWindowPosition());
       if (widgetMode && !options.settingsOpen && options.displayMode === "expanded" && widgetPlacement !== "free") await applyWidgetPlacement(widgetPlacement);
       if (disposed) return;
       try {
+        unlisteners.push(await listen("widget-drag-released", onDragEnd));
         unlisteners.push(await getCurrentWindow().onMoved(({ payload }) => {
           saveWindowPosition({ x: payload.x, y: payload.y });
           if (!dragging || !widgetMode || options.displayMode !== "expanded" || positionLocked) return;
-          latestPosition = payload;
           void previewPlacement(payload);
         }));
         unlisteners.push(await listen<string>("tray-select-game", ({ payload }) => { const id = GAME_IDS.find((gameId) => gameId === payload); if (id) options.setSelectedGameId(id); }));
@@ -72,7 +73,7 @@ export function useDesktopIntegration(options: DesktopIntegrationOptions) {
         unlisteners.push(await listen("tray-open-settings", options.openSettings));
       } catch { /* Browser preview has no native event bridge. */ }
     })();
-    return () => { disposed = true; window.removeEventListener("widget-native-drag-start", onDragStart); window.removeEventListener("widget-native-drag-end", onDragEnd); for (const unlisten of unlisteners) unlisten(); };
+    return () => { disposed = true; window.removeEventListener("widget-native-drag-start", onDragStart); for (const unlisten of unlisteners) unlisten(); };
   }, [options.displayMode, options.openSettings, options.refresh, options.setDisplayMode, options.setSelectedGameId, options.settingsOpen, positionLocked, widgetMode, widgetPlacement]);
 
   return { alwaysOnTop, setAlwaysOnTop, widgetMode, setWidgetMode: setWidgetModeEnabled, positionLocked, setPositionLocked, widgetPlacement, setWidgetPlacement };

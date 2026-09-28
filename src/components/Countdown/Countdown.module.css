@@ -17,3 +17,14 @@
 :global([data-placement="topLeft"]) .countdown, :global([data-placement="topRight"]) .countdown, :global([data-placement="bottomLeft"]) .countdown, :global([data-placement="bottomRight"]) .countdown { margin: 9px 0 7px; }
 :global([data-placement="topLeft"]) .countdown strong, :global([data-placement="topRight"]) .countdown strong, :global([data-placement="bottomLeft"]) .countdown strong, :global([data-placement="bottomRight"]) .countdown strong { font-size: 1.3rem; }
 :global([data-placement="topLeft"]) .unknown, :global([data-placement="topRight"]) .unknown, :global([data-placement="bottomLeft"]) .unknown, :global([data-placement="bottomRight"]) .unknown { margin: 8px 0 7px; }
+:global([data-layout="horizontal"]) .countdown { margin: 9px 0 7px; }
+:global([data-layout="horizontal"]) .countdown strong { font-size: 1.25rem; }
+:global([data-layout="horizontal"]) .unknown { margin: 10px 0 8px; }
+:global([data-layout="corner"]) .countdown { margin: 9px 0 7px; }
+:global([data-layout="corner"]) .countdown strong { font-size: 1.3rem; }
+:global([data-layout="corner"]) .unknown { margin: 8px 0 7px; }
+@container (min-width: 650px) and (max-height: 280px) {
+  .countdown { margin: 9px 0 7px; }
+  .countdown strong { font-size: 1.25rem; }
+  .unknown { margin: 10px 0 8px; }
+}

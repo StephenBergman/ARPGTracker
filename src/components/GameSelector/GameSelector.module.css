@@ -7,3 +7,7 @@
 :global([data-placement="topCenter"]) .selector, :global([data-placement="bottomCenter"]) .selector { padding: 8px 108px 0 16px; }
 :global([data-placement="leftCenter"]) .selector, :global([data-placement="rightCenter"]) .selector { grid-template-columns: repeat(7, minmax(0, 1fr)); padding-left: 12px; }
 :global([data-placement="topLeft"]) .selector, :global([data-placement="topRight"]) .selector, :global([data-placement="bottomLeft"]) .selector, :global([data-placement="bottomRight"]) .selector { padding-top: 8px; }
+.selector[data-layout="horizontal"] { padding: 8px 108px 0 16px; }
+.selector[data-layout="vertical"] { grid-template-columns: repeat(7, minmax(0, 1fr)); padding-left: 12px; }
+.selector[data-layout="corner"] { padding-top: 8px; }
+@container (min-width: 650px) and (max-height: 280px) { .selector { padding: 8px 108px 0 16px; } }

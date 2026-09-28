@@ -1,5 +1,30 @@
 mod tray;
 
+#[tauri::command]
+fn watch_widget_drag_release(app: tauri::AppHandle) {
+    std::thread::spawn(move || {
+        #[cfg(target_os = "windows")]
+        {
+            use std::{thread, time::Duration};
+            use tauri::Emitter;
+            use windows_sys::Win32::UI::Input::KeyboardAndMouse::{GetAsyncKeyState, VK_LBUTTON};
+            loop {
+                let pressed = unsafe { (GetAsyncKeyState(VK_LBUTTON as i32) as u16 & 0x8000) != 0 };
+                if !pressed {
+                    let _ = app.emit("widget-drag-released", ());
+                    break;
+                }
+                thread::sleep(Duration::from_millis(8));
+            }
+        }
+        #[cfg(not(target_os = "windows"))]
+        {
+            use tauri::Emitter;
+            let _ = app.emit("widget-drag-released", ());
+        }
+    });
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -15,6 +40,7 @@ pub fn run() {
             },
         ))
         .plugin(tauri_plugin_autostart::Builder::new().build())
+        .invoke_handler(tauri::generate_handler![watch_widget_drag_release])
         .setup(|app| {
             tray::create(app)?;
             Ok(())

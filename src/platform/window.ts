@@ -1,6 +1,7 @@
 import { LogicalPosition, LogicalSize } from "@tauri-apps/api/dpi";
 import { availableMonitors, currentMonitor, getCurrentWindow, PhysicalPosition, type Monitor } from "@tauri-apps/api/window";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { invoke } from "@tauri-apps/api/core";
 import type { DisplayMode, WidgetPlacement } from "../features/settings/settings.types";
 export async function minimizeMainWindow(): Promise<void> { await getCurrentWindow().minimize(); }
 const SNAP_OVERLAY_LABEL = "snap-overlay";
@@ -12,7 +13,7 @@ async function showSnapOverlay(): Promise<void> {
     if (!monitor) return;
     const position = monitor.workArea.position.toLogical(monitor.scaleFactor);
     const size = monitor.workArea.size.toLogical(monitor.scaleFactor);
-    const overlay = new WebviewWindow(SNAP_OVERLAY_LABEL, { url: "/?snap-overlay=1", x: position.x, y: position.y, width: size.width, height: size.height, decorations: false, transparent: true, alwaysOnTop: true, skipTaskbar: true, focus: false, resizable: false, shadow: false });
+    const overlay = new WebviewWindow(SNAP_OVERLAY_LABEL, { url: "index.html?snap-overlay=1", x: position.x, y: position.y, width: size.width, height: size.height, decorations: false, transparent: true, alwaysOnTop: true, skipTaskbar: true, focus: false, resizable: false, shadow: false });
     await new Promise<void>((resolve, reject) => { void overlay.once("tauri://created", () => resolve()); void overlay.once("tauri://error", ({ payload }) => reject(payload)); });
     await overlay.setIgnoreCursorEvents(true);
   } catch { /* Overlay failure must not prevent dragging. */ }
@@ -20,10 +21,9 @@ async function showSnapOverlay(): Promise<void> {
 export async function hideSnapOverlay(): Promise<void> { try { await (await WebviewWindow.getByLabel(SNAP_OVERLAY_LABEL))?.destroy(); } catch { /* Non-fatal. */ } }
 export async function startDraggingMainWindow(showPlacementPreview = false): Promise<void> {
   try {
-    if (showPlacementPreview) { await showSnapOverlay(); window.dispatchEvent(new Event("widget-native-drag-start")); }
+    if (showPlacementPreview) { await showSnapOverlay(); window.dispatchEvent(new Event("widget-native-drag-start")); await invoke("watch_widget_drag_release"); }
     await getCurrentWindow().startDragging();
   } catch { /* Browser preview. */ }
-  finally { if (showPlacementPreview) window.dispatchEvent(new Event("widget-native-drag-end")); }
 }
 // Phase 7 can replace this implementation with hide-to-tray behavior.
 export async function closeMainWindow(): Promise<void> { await getCurrentWindow().close(); }
@@ -36,24 +36,38 @@ export async function setWidgetMode(value: boolean): Promise<void> { try { await
 
 const PLACEMENT_GAP = 12;
 export function getWidgetPlacementSize(placement: WidgetPlacement): { width: number; height: number } {
-  if (placement === "topCenter" || placement === "bottomCenter") return { width: 720, height: 210 };
+  if (placement === "topCenter" || placement === "bottomCenter") return { width: 720, height: 250 };
   if (placement === "leftCenter" || placement === "rightCenter") return { width: 380, height: 560 };
   if (placement !== "free") return { width: 430, height: 390 };
   return { width: 430, height: 560 };
 }
 
 export function detectWidgetPlacement(position: { x: number; y: number }, size: { width: number; height: number }, monitors: readonly Monitor[]): WidgetPlacement {
-  const center = { x: position.x + size.width / 2, y: position.y + size.height / 2 };
-  const monitor = monitors.find((candidate) => center.x >= candidate.workArea.position.x && center.x < candidate.workArea.position.x + candidate.workArea.size.width && center.y >= candidate.workArea.position.y && center.y < candidate.workArea.position.y + candidate.workArea.size.height);
-  if (!monitor) return "free";
-  const horizontal = (center.x - monitor.workArea.position.x) / monitor.workArea.size.width;
-  const vertical = (center.y - monitor.workArea.position.y) / monitor.workArea.size.height;
-  const xZone = horizontal < 0.28 ? "Left" : horizontal > 0.72 ? "Right" : "Center";
-  const yZone = vertical < 0.28 ? "top" : vertical > 0.72 ? "bottom" : "center";
-  if (xZone === "Center" && yZone === "center") return "free";
-  if (yZone === "center") return xZone === "Left" ? "leftCenter" : xZone === "Right" ? "rightCenter" : "free";
-  if (xZone === "Center") return yZone === "top" ? "topCenter" : "bottomCenter";
-  return `${yZone}${xZone}` as WidgetPlacement;
+  const dragged = { x: position.x, y: position.y, width: size.width, height: size.height };
+  const fixedPlacements: readonly Exclude<WidgetPlacement, "free">[] = ["topLeft", "topCenter", "topRight", "leftCenter", "rightCenter", "bottomLeft", "bottomCenter", "bottomRight"];
+  let best: { placement: WidgetPlacement; score: number } | null = null;
+  for (const monitor of monitors) {
+    const scale = monitor.scaleFactor;
+    const area = monitor.workArea;
+    for (const placement of fixedPlacements) {
+      const logicalSize = getWidgetPlacementSize(placement);
+      const target = { width: logicalSize.width * scale, height: logicalSize.height * scale, x: 0, y: 0 };
+      const gap = PLACEMENT_GAP * scale;
+      target.x = placement.endsWith("Left") || placement === "leftCenter" ? area.position.x + gap : placement.endsWith("Right") || placement === "rightCenter" ? area.position.x + area.size.width - target.width - gap : area.position.x + (area.size.width - target.width) / 2;
+      target.y = placement.startsWith("top") ? area.position.y + gap : placement.startsWith("bottom") ? area.position.y + area.size.height - target.height - gap : area.position.y + (area.size.height - target.height) / 2;
+      const overlapWidth = Math.max(0, Math.min(dragged.x + dragged.width, target.x + target.width) - Math.max(dragged.x, target.x));
+      const overlapHeight = Math.max(0, Math.min(dragged.y + dragged.height, target.y + target.height) - Math.max(dragged.y, target.y));
+      const overlapRatio = (overlapWidth * overlapHeight) / Math.max(1, Math.min(dragged.width * dragged.height, target.width * target.height));
+      const dx = Math.max(target.x - (dragged.x + dragged.width), dragged.x - (target.x + target.width), 0);
+      const dy = Math.max(target.y - (dragged.y + dragged.height), dragged.y - (target.y + target.height), 0);
+      const distance = Math.hypot(dx, dy);
+      const tolerance = 72 * scale;
+      if (overlapRatio < 0.1 && distance > tolerance) continue;
+      const score = overlapRatio * 10_000 - distance;
+      if (!best || score > best.score) best = { placement, score };
+    }
+  }
+  return best?.placement ?? "free";
 }
 
 export async function applyWidgetPlacement(placement: WidgetPlacement): Promise<void> {

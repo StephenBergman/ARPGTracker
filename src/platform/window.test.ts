@@ -24,8 +24,12 @@ describe("widget placement", () => {
     expect(detectWidgetPlacement({ x: 745, y: 345 }, { width: 430, height: 390 }, monitors)).toBe("free");
   });
 
+  it("attracts a nearby window before it overlaps a target", () => {
+    expect(detectWidgetPlacement({ x: 450, y: 12 }, { width: 120, height: 120 }, monitors)).toBe("topLeft");
+  });
+
   it("uses placement-specific aspect ratios", () => {
-    expect(getWidgetPlacementSize("topCenter")).toEqual({ width: 720, height: 210 });
+    expect(getWidgetPlacementSize("topCenter")).toEqual({ width: 720, height: 250 });
     expect(getWidgetPlacementSize("leftCenter")).toEqual({ width: 380, height: 560 });
     expect(getWidgetPlacementSize("bottomRight")).toEqual({ width: 430, height: 390 });
   });

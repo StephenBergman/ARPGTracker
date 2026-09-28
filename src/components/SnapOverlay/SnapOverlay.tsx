@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import type { WidgetPlacement } from "../../features/settings/settings.types";
 import styles from "./SnapOverlay.module.css";
 
-const zones: ReadonlyArray<{ placement: WidgetPlacement; label: string }> = [{ placement: "topLeft", label: "Top left" }, { placement: "topCenter", label: "Top center" }, { placement: "topRight", label: "Top right" }, { placement: "leftCenter", label: "Left center" }, { placement: "free", label: "Free" }, { placement: "rightCenter", label: "Right center" }, { placement: "bottomLeft", label: "Bottom left" }, { placement: "bottomCenter", label: "Bottom center" }, { placement: "bottomRight", label: "Bottom right" }];
+const zones: ReadonlyArray<{ placement: WidgetPlacement; label: string }> = [{ placement: "topLeft", label: "Top left" }, { placement: "topCenter", label: "Top center" }, { placement: "topRight", label: "Top right" }, { placement: "leftCenter", label: "Left center" }, { placement: "rightCenter", label: "Right center" }, { placement: "bottomLeft", label: "Bottom left" }, { placement: "bottomCenter", label: "Bottom center" }, { placement: "bottomRight", label: "Bottom right" }, { placement: "free", label: "Free placement" }];
 
 export function SnapOverlay() {
   const [active, setActive] = useState<WidgetPlacement>("free");
