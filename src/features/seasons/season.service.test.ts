@@ -32,6 +32,17 @@ describe("SeasonService", () => {
     expect((await new SeasonService(new MemoryCache(null, true)).loadLocal()).origin).toBe("bundled");
   });
 
+  it("replaces an older valid cache with newer bundled data", async () => {
+    const older = structuredClone(bundled) as SeasonDataset;
+    older.updatedAt = "2026-09-28T12:00:00Z";
+    older.games.projectDiablo2.currentSeason = { id: "pd2-placeholder", title: "Current Season", startDate: "2026-08-01T00:00:00Z", endDate: null };
+    const cache = new MemoryCache(older);
+    const result = await new SeasonService(cache).loadLocal();
+    expect(result.origin).toBe("bundled");
+    expect(result.data.games.projectDiablo2.currentSeason.id).toBe("pd2-season-13");
+    expect(cache.written?.updatedAt).toBe(bundled.updatedAt);
+  });
+
   it("rejects malformed remote data without replacing the cache", async () => {
     const cache = new MemoryCache(bundled);
     const result = await new SeasonService(cache, source({ schemaVersion: 1 })).resolve();

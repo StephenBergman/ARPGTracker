@@ -53,7 +53,8 @@ export class SeasonService {
   async loadLocal(): Promise<SeasonDataResult> {
     try {
       const cached = validateSeasonDataset(await this.cache.read());
-      if (cached.success) { logDevelopment("Loaded cached season dataset"); return { data: cached.data, origin: "cache" }; }
+      if (cached.success && Date.parse(cached.data.updatedAt) >= Date.parse(this.bundled.updatedAt)) { logDevelopment("Loaded cached season dataset"); return { data: cached.data, origin: "cache" }; }
+      if (cached.success) { await this.cache.write(this.bundled); logDevelopment("Bundled dataset is newer than cache"); return { data: this.bundled, origin: "bundled" }; }
       logDevelopment("Cached dataset invalid; using bundled fallback");
     } catch { logDevelopment("Cache unavailable; using bundled fallback"); }
     return { data: this.bundled, origin: "bundled" };
