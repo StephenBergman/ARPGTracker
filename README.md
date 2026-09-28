@@ -60,6 +60,10 @@ To publish, update the version consistently in `package.json`, `src-tauri/Cargo.
 
 The maintainable static source is `data/seasons.json`, with a packaged fallback at `src/data/default-seasons.json`. `SeasonService` supports the required `remote → cache → bundled` fallback chain and also exposes separate local-load and refresh operations so the future UI can render immediately before attempting the network.
 
+Installed applications fetch the repository's raw `data/seasons.json` shortly after launch and once per day, caching only newer validated datasets. Set `VITE_SEASON_DATA_URL` at build time only when a different static endpoint is required.
+
+The `Monitor official season sources` GitHub Actions workflow runs daily and can also be dispatched manually. It checks official news, patch-note, and Steam sources and maintains a deduplicated `season-data` issue when it finds a possible newer announcement. A human verifies the announcement before updating the dataset so ambiguous prose cannot silently create a false countdown. Run the same scan locally with `npm run seasons:check`.
+
 Season datasets use schema version `1`. Each configured game requires current-season details, a `confirmed`, `estimated`, or `unknown` next-season status, per-game timestamps, and UTC ISO timestamps for every available date. Additions must also be registered in `GAME_IDS` and pass runtime validation.
 
 The expanded widget is data-driven across all configured games and handles confirmed, estimated, and unknown dates. Its centralized countdown updates once per second when seconds are visible (or once per minute otherwise), aligns updates to clock boundaries, clamps at zero, and requests fresh season data once at transition. Each game resolves through a typed theme map, keeping visual identity separate from season behavior.
