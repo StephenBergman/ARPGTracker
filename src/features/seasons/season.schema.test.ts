@@ -24,6 +24,18 @@ describe("validateSeasonDataset", () => {
     expect(pd2.source).toBe("https://www.projectdiablo2.com/");
   });
 
+  it("uses the official Torchlight Infinite season instead of placeholder data", () => {
+    const result = validateSeasonDataset(bundled);
+    expect(result.success).toBe(true);
+    if (!result.success) return;
+    const season = result.data.games.torchlightInfinite;
+    expect(season.currentSeason.id).toBe("tli-afterlight");
+    expect(season.currentSeason.title).toBe("Afterlight");
+    expect(season.currentSeason.startDate).toBe("2026-07-17T02:00:00Z");
+    expect(season.nextSeason.status).toBe("unknown");
+    expect(season.source).toContain("steamcommunity.com");
+  });
+
   it("rejects unsupported schema versions", () => {
     expect(validateSeasonDataset({ ...bundled, schemaVersion: 2 }).success).toBe(false);
   });
