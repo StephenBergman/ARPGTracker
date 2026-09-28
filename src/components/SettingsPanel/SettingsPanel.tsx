@@ -1,5 +1,5 @@
 import { useEffect, useRef, type KeyboardEvent } from "react";
-import type { DisplayMode } from "../../features/settings/settings.types";
+import type { DisplayMode, WidgetPlacement } from "../../features/settings/settings.types";
 import { formatCalendarDate } from "../../features/seasons/season.utils";
 import styles from "./SettingsPanel.module.css";
 import type { StartupSyncStatus } from "../../hooks/useDisplayPreferences";
@@ -11,9 +11,11 @@ function ToggleRow({ label, checked, onChange, description }: ToggleRowProps) {
 }
 
 interface SettingsPanelProps {
-  displayMode: DisplayMode; alwaysOnTop: boolean; widgetMode: boolean; positionLocked: boolean; launchAtStartup: boolean; startupSyncStatus: StartupSyncStatus; showSeconds: boolean; showSeasonProgress: boolean; lastUpdated: string; isRefreshing: boolean; appUpdater: AppUpdaterState;
-  onDisplayMode: (mode: DisplayMode) => void; onAlwaysOnTop: (value: boolean) => void; onWidgetMode: (value: boolean) => void; onPositionLocked: (value: boolean) => void; onLaunchAtStartup: (value: boolean) => void; onShowSeconds: (value: boolean) => void; onShowSeasonProgress: (value: boolean) => void; onRefresh: () => void; onClose: () => void;
+  displayMode: DisplayMode; alwaysOnTop: boolean; widgetMode: boolean; positionLocked: boolean; widgetPlacement: WidgetPlacement; launchAtStartup: boolean; startupSyncStatus: StartupSyncStatus; showSeconds: boolean; showSeasonProgress: boolean; lastUpdated: string; isRefreshing: boolean; appUpdater: AppUpdaterState;
+  onDisplayMode: (mode: DisplayMode) => void; onAlwaysOnTop: (value: boolean) => void; onWidgetMode: (value: boolean) => void; onPositionLocked: (value: boolean) => void; onWidgetPlacement: (value: WidgetPlacement) => void; onLaunchAtStartup: (value: boolean) => void; onShowSeconds: (value: boolean) => void; onShowSeasonProgress: (value: boolean) => void; onRefresh: () => void; onClose: () => void;
 }
+
+const placements: ReadonlyArray<{ value: WidgetPlacement; label: string }> = [{ value: "free", label: "Free" }, { value: "topLeft", label: "Top left" }, { value: "topCenter", label: "Top center" }, { value: "topRight", label: "Top right" }, { value: "leftCenter", label: "Left center" }, { value: "rightCenter", label: "Right center" }, { value: "bottomLeft", label: "Bottom left" }, { value: "bottomCenter", label: "Bottom center" }, { value: "bottomRight", label: "Bottom right" }];
 
 export function SettingsPanel(props: SettingsPanelProps) {
   const panelRef = useRef<HTMLElement>(null);
@@ -41,6 +43,7 @@ export function SettingsPanel(props: SettingsPanelProps) {
       <ToggleRow label="Launch with Windows" checked={props.launchAtStartup} onChange={props.onLaunchAtStartup} description={startupDescription} />
       <ToggleRow label="Widget mode" checked={props.widgetMode} onChange={props.onWidgetMode} description="Hide from the taskbar and manage from the system tray" />
       <ToggleRow label="Lock position" checked={props.positionLocked} onChange={props.onPositionLocked} description="Prevent accidental dragging" />
+      {props.widgetMode && <label className={styles.selectRow}><span><strong>Widget placement</strong><small>Snap and resize within the current monitor</small></span><select value={props.widgetPlacement} onChange={(event) => props.onWidgetPlacement(event.target.value as WidgetPlacement)}>{placements.map((placement) => <option key={placement.value} value={placement.value}>{placement.label}</option>)}</select></label>}
       <ToggleRow label="Always on top" checked={props.alwaysOnTop} onChange={props.onAlwaysOnTop} />
       <ToggleRow label="Compact mode" checked={props.displayMode === "compact"} onChange={(value) => props.onDisplayMode(value ? "compact" : "expanded")} />
     </div>

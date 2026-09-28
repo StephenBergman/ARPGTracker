@@ -7,3 +7,8 @@
 .facts div + div { border-left: 1px solid var(--color-border); padding-left: 20px; }
 .facts span { font-size: 0.55rem; font-weight: 700; }
 .facts strong { overflow: hidden; color: var(--color-text); font: 500 0.82rem/1.35 var(--font-ui); text-overflow: ellipsis; white-space: nowrap; }
+:global([data-placement="topCenter"]) .heading h1, :global([data-placement="bottomCenter"]) .heading h1 { font-size: 1.2rem; }
+:global([data-placement="topCenter"]) .facts, :global([data-placement="bottomCenter"]) .facts { gap: 10px; margin-top: 11px; }
+:global([data-placement="topCenter"]) .facts div, :global([data-placement="bottomCenter"]) .facts div { gap: 3px; }
+:global([data-placement="topLeft"]) .facts, :global([data-placement="topRight"]) .facts, :global([data-placement="bottomLeft"]) .facts, :global([data-placement="bottomRight"]) .facts { margin-top: 10px; }
+:global([data-placement="topLeft"]) .heading h1, :global([data-placement="topRight"]) .heading h1, :global([data-placement="bottomLeft"]) .heading h1, :global([data-placement="bottomRight"]) .heading h1 { font-size: 1.25rem; }

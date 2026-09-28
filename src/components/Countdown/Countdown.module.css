@@ -11,3 +11,9 @@
 .transition { display: flex; flex-direction: column; gap: 6px; margin: 20px 0 17px; }
 .transition strong { color: var(--color-accent); font-size: 0.82rem; font-weight: 500; }
 .transition span { color: var(--color-text-muted); font-size: 0.68rem; }
+:global([data-placement="topCenter"]) .countdown, :global([data-placement="bottomCenter"]) .countdown { margin: 9px 0 7px; }
+:global([data-placement="topCenter"]) .countdown strong, :global([data-placement="bottomCenter"]) .countdown strong { font-size: 1.25rem; }
+:global([data-placement="topCenter"]) .unknown, :global([data-placement="bottomCenter"]) .unknown { margin: 10px 0 8px; }
+:global([data-placement="topLeft"]) .countdown, :global([data-placement="topRight"]) .countdown, :global([data-placement="bottomLeft"]) .countdown, :global([data-placement="bottomRight"]) .countdown { margin: 9px 0 7px; }
+:global([data-placement="topLeft"]) .countdown strong, :global([data-placement="topRight"]) .countdown strong, :global([data-placement="bottomLeft"]) .countdown strong, :global([data-placement="bottomRight"]) .countdown strong { font-size: 1.3rem; }
+:global([data-placement="topLeft"]) .unknown, :global([data-placement="topRight"]) .unknown, :global([data-placement="bottomLeft"]) .unknown, :global([data-placement="bottomRight"]) .unknown { margin: 8px 0 7px; }

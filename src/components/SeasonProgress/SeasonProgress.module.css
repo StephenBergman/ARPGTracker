@@ -3,3 +3,4 @@
 .label strong { color: var(--color-accent); font-weight: 600; }
 .track { height: 3px; overflow: hidden; border-radius: 2px; background: rgba(255, 255, 255, 0.055); }
 .track span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--color-accent-dim), var(--color-accent)); box-shadow: 0 0 7px var(--color-glow); transition: width 300ms ease, background 240ms ease; }
+:global([data-placement="topLeft"]) .section, :global([data-placement="topRight"]) .section, :global([data-placement="bottomLeft"]) .section, :global([data-placement="bottomRight"]) .section { padding-top: 10px; }

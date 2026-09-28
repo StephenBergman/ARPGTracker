@@ -6,3 +6,10 @@
 .source { margin: 9px 0 0; color: #56524c; font-size: 0.52rem; letter-spacing: 0.07em; text-align: center; text-transform: uppercase; }
 :global([data-widget="true"][data-mode="expanded"]) .content { padding-top: 16px; padding-bottom: 16px; }
 :global([data-widget="true"][data-mode="expanded"]) .divider { margin-top: 15px; margin-bottom: 14px; }
+:global([data-placement="topCenter"]) .content, :global([data-placement="bottomCenter"]) .content { display: grid; grid-template-columns: minmax(0, 1fr) 25px minmax(0, 1fr); align-items: center; padding: 7px 24px 12px; }
+:global([data-placement="topCenter"]) .divider, :global([data-placement="bottomCenter"]) .divider { width: 1px; height: 100px; margin: 0 12px; background: linear-gradient(transparent, var(--color-border), transparent); }
+:global([data-placement="topCenter"]) .divider::before, :global([data-placement="topCenter"]) .divider::after, :global([data-placement="topCenter"]) .divider span, :global([data-placement="bottomCenter"]) .divider::before, :global([data-placement="bottomCenter"]) .divider::after, :global([data-placement="bottomCenter"]) .divider span { display: none; }
+:global([data-placement="topCenter"]) .source, :global([data-placement="bottomCenter"]) .source, :global([data-placement="topCenter"]) .content > section[aria-label^="Season progress"], :global([data-placement="bottomCenter"]) .content > section[aria-label^="Season progress"] { display: none; }
+:global([data-placement="topLeft"]) .content, :global([data-placement="topRight"]) .content, :global([data-placement="bottomLeft"]) .content, :global([data-placement="bottomRight"]) .content { padding: 9px 24px 12px; }
+:global([data-placement="topLeft"]) .divider, :global([data-placement="topRight"]) .divider, :global([data-placement="bottomLeft"]) .divider, :global([data-placement="bottomRight"]) .divider { margin: 9px 0; }
+:global([data-placement="topLeft"]) .source, :global([data-placement="topRight"]) .source, :global([data-placement="bottomLeft"]) .source, :global([data-placement="bottomRight"]) .source { display: none; }

@@ -1,4 +1,4 @@
-import type { DisplayMode } from "./settings.types";
+import type { DisplayMode, WidgetPlacement } from "./settings.types";
 import type { GameId } from "../seasons/season.types";
 import { GAME_IDS } from "../seasons/season.types";
 import type { WindowPosition } from "./settings.types";
@@ -11,6 +11,8 @@ const WINDOW_POSITION_KEY = "arpg-seasons.window-position.v1";
 const LAUNCH_AT_STARTUP_KEY = "arpg-seasons.launch-at-startup.v1";
 const WIDGET_MODE_KEY = "arpg-seasons.widget-mode.v1";
 const POSITION_LOCKED_KEY = "arpg-seasons.position-locked.v1";
+const WIDGET_PLACEMENT_KEY = "arpg-seasons.widget-placement.v1";
+const WIDGET_PLACEMENTS: readonly WidgetPlacement[] = ["free", "topLeft", "topCenter", "topRight", "leftCenter", "rightCenter", "bottomLeft", "bottomCenter", "bottomRight"];
 const SHOW_SECONDS_KEY = "arpg-seasons.show-seconds.v1";
 const SHOW_PROGRESS_KEY = "arpg-seasons.show-progress.v1";
 
@@ -52,6 +54,11 @@ export const loadWidgetMode = (storage: StorageReader = localStorage) => loadBoo
 export const saveWidgetMode = (value: boolean, storage: StorageReader = localStorage) => saveBoolean(WIDGET_MODE_KEY, value, storage);
 export const loadPositionLocked = (storage: StorageReader = localStorage) => loadBoolean(POSITION_LOCKED_KEY, false, storage);
 export const savePositionLocked = (value: boolean, storage: StorageReader = localStorage) => saveBoolean(POSITION_LOCKED_KEY, value, storage);
+export function loadWidgetPlacement(storage: StorageReader = localStorage): WidgetPlacement {
+  try { const value = storage.getItem(WIDGET_PLACEMENT_KEY); return WIDGET_PLACEMENTS.find((placement) => placement === value) ?? "free"; }
+  catch { return "free"; }
+}
+export function saveWidgetPlacement(value: WidgetPlacement, storage: StorageReader = localStorage): void { try { storage.setItem(WIDGET_PLACEMENT_KEY, value); } catch { /* Non-fatal. */ } }
 export const loadShowSeconds = (storage: StorageReader = localStorage) => loadBoolean(SHOW_SECONDS_KEY, true, storage);
 export const saveShowSeconds = (value: boolean, storage: StorageReader = localStorage) => saveBoolean(SHOW_SECONDS_KEY, value, storage);
 export const loadShowSeasonProgress = (storage: StorageReader = localStorage) => loadBoolean(SHOW_PROGRESS_KEY, true, storage);
