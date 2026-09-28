@@ -1,6 +1,6 @@
 # ARPG Seasons
 
-A lightweight Windows-first desktop widget for ARPG season information and countdowns. Version 1.0 completes the MVP with native Windows packaging and installer metadata.
+A lightweight Windows-first desktop widget for ARPG season information and countdowns. Version 1.1 adds signed, user-approved application updates through GitHub Releases.
 
 ## Stack
 
@@ -30,11 +30,19 @@ npm run tauri build
 
 ## Production build
 
-The production release is version `1.0.0`. Run `npm run release:windows` on Windows to build the signed-ready executable and per-user NSIS installer. The release script copies the distributable installer to `ARPG-Seasons-1.0.0-x64-setup.exe` in the project root so it is easy to find. The installer adds ARPG Seasons to the Windows installed-apps list and provides standard uninstall support without requiring administrator access.
+The updater-enabled production release is version `1.1.0`. Run `npm run release:windows` on Windows to build the per-user NSIS installer and its Tauri updater signature. Set `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` in the current shell first; the script uses the private key at `%USERPROFILE%\.tauri\arpg-seasons-updater.key` unless `TAURI_SIGNING_PRIVATE_KEY` specifies another key. The release script copies the distributable installer and `.sig` file to the project root. The installer adds ARPG Seasons to the Windows installed-apps list and provides standard uninstall support without requiring administrator access.
 
 Release builds use the production icon set in `src-tauri/icons` and embed the ARPG Seasons product name, version, description, publisher, and copyright metadata. Builds are unsigned until a Windows code-signing certificate is configured, so local test installations may show a SmartScreen warning.
 
 Before publishing a release, verify a clean install, first launch, tray behavior, launch-at-startup opt-in, upgrade over the previous version, and uninstall on a Windows test machine.
+
+## Application releases and updates
+
+Application updates are delivered from GitHub Releases and are separate from season-data refreshes. The widget checks for a newer signed release shortly after launch, every six hours, and on demand from Settings. It never installs without the user choosing **Update and restart**.
+
+The private updater key must never be committed. Add its full contents to the `TAURI_SIGNING_PRIVATE_KEY` GitHub Actions secret and its password to `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`. Keep an independent secure backup of both: installed clients will reject releases signed by a different key.
+
+To publish, update the version consistently in `package.json`, `src-tauri/Cargo.toml`, and `src-tauri/tauri.conf.json`, commit the changes, then push a matching tag such as `v1.1.0`. The Windows release workflow runs the tests, builds the NSIS installer and signature, creates the GitHub Release, and uploads `latest.json` for updater discovery. Version `1.0.0` does not contain the updater, so existing users must install `1.1.0` manually once; later versions can update in-app.
 
 ## Phase 1 structure
 

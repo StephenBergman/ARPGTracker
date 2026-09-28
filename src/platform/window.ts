@@ -2,6 +2,7 @@ import { LogicalSize } from "@tauri-apps/api/dpi";
 import { availableMonitors, getCurrentWindow, PhysicalPosition, type Monitor } from "@tauri-apps/api/window";
 import type { DisplayMode } from "../features/settings/settings.types";
 export async function minimizeMainWindow(): Promise<void> { await getCurrentWindow().minimize(); }
+export async function startDraggingMainWindow(): Promise<void> { try { await getCurrentWindow().startDragging(); } catch { /* Browser preview. */ } }
 // Phase 7 can replace this implementation with hide-to-tray behavior.
 export async function closeMainWindow(): Promise<void> { await getCurrentWindow().close(); }
 export async function setWidgetDisplayMode(mode: DisplayMode): Promise<void> {

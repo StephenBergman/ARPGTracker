@@ -12,6 +12,7 @@ import { useSeasonData } from "../hooks/useSeasonData";
 import { useDisplayMode } from "../hooks/useDisplayMode";
 import { useDesktopIntegration } from "../hooks/useDesktopIntegration";
 import { useDisplayPreferences } from "../hooks/useDisplayPreferences";
+import { useAppUpdater } from "../hooks/useAppUpdater";
 import { loadSelectedGame } from "../features/settings/settings.store";
 import { GAME_THEMES } from "../themes";
 import styles from "./App.module.css";
@@ -21,6 +22,7 @@ export function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { displayMode, setDisplayMode, toggleDisplayMode } = useDisplayMode();
   const preferences = useDisplayPreferences();
+  const appUpdater = useAppUpdater();
   const { dataset, origin, refresh, isRefreshing } = useSeasonData();
   const openSettings = useCallback(() => { setDisplayMode("expanded"); setSettingsOpen(true); }, [setDisplayMode]);
   const { alwaysOnTop, setAlwaysOnTop } = useDesktopIntegration({ selectedGameId, setSelectedGameId, displayMode, setDisplayMode, refresh, openSettings });
@@ -38,7 +40,7 @@ export function App() {
         {preferences.showSeasonProgress && <SeasonProgress season={selectedSeason} now={now} />}
         <p className={styles.source}>Data source: {origin}{isRefreshing ? " / checking for updates" : ""}</p>
       </main></>}
-      {settingsOpen && <SettingsPanel displayMode={displayMode} alwaysOnTop={alwaysOnTop} launchAtStartup={preferences.launchAtStartup} startupSyncStatus={preferences.startupSyncStatus} showSeconds={preferences.showSeconds} showSeasonProgress={preferences.showSeasonProgress} lastUpdated={dataset.updatedAt} isRefreshing={isRefreshing} onDisplayMode={setModeFromSettings} onAlwaysOnTop={setAlwaysOnTop} onLaunchAtStartup={preferences.setLaunchAtStartup} onShowSeconds={preferences.setShowSeconds} onShowSeasonProgress={preferences.setShowSeasonProgress} onRefresh={() => { void refresh(); }} onClose={() => setSettingsOpen(false)} />}
+      {settingsOpen && <SettingsPanel displayMode={displayMode} alwaysOnTop={alwaysOnTop} launchAtStartup={preferences.launchAtStartup} startupSyncStatus={preferences.startupSyncStatus} showSeconds={preferences.showSeconds} showSeasonProgress={preferences.showSeasonProgress} lastUpdated={dataset.updatedAt} isRefreshing={isRefreshing} appUpdater={appUpdater} onDisplayMode={setModeFromSettings} onAlwaysOnTop={setAlwaysOnTop} onLaunchAtStartup={preferences.setLaunchAtStartup} onShowSeconds={preferences.setShowSeconds} onShowSeasonProgress={preferences.setShowSeasonProgress} onRefresh={() => { void refresh(); }} onClose={() => setSettingsOpen(false)} />}
     </WidgetShell>
   );
 }

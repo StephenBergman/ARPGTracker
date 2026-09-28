@@ -1,8 +1,4 @@
-use tauri::{
-    menu::MenuBuilder,
-    tray::TrayIconBuilder,
-    App, AppHandle, Emitter, Manager,
-};
+use tauri::{menu::MenuBuilder, tray::TrayIconBuilder, App, AppHandle, Emitter, Manager};
 
 fn show_main_window(app: &AppHandle) {
     if let Some(window) = app.get_webview_window("main") {
@@ -15,18 +11,41 @@ fn show_main_window(app: &AppHandle) {
 fn handle_menu(app: &AppHandle, id: &str) {
     match id {
         "open" => show_main_window(app),
-        "compact" => { let _ = app.emit("tray-toggle-compact", ()); }
-        "always-on-top" => { let _ = app.emit("tray-toggle-always-on-top", ()); }
-        "refresh" => { let _ = app.emit("tray-refresh-data", ()); }
-        "settings" => { show_main_window(app); let _ = app.emit("tray-open-settings", ()); }
+        "compact" => {
+            let _ = app.emit("tray-toggle-compact", ());
+        }
+        "always-on-top" => {
+            let _ = app.emit("tray-toggle-always-on-top", ());
+        }
+        "refresh" => {
+            let _ = app.emit("tray-refresh-data", ());
+        }
+        "settings" => {
+            show_main_window(app);
+            let _ = app.emit("tray-open-settings", ());
+        }
         "exit" => app.exit(0),
-        "game-poe" => { let _ = app.emit("tray-select-game", "poe"); }
-        "game-poe2" => { let _ = app.emit("tray-select-game", "poe2"); }
-        "game-diablo4" => { let _ = app.emit("tray-select-game", "diablo4"); }
-        "game-lastEpoch" => { let _ = app.emit("tray-select-game", "lastEpoch"); }
-        "game-diablo2Resurrected" => { let _ = app.emit("tray-select-game", "diablo2Resurrected"); }
-        "game-projectDiablo2" => { let _ = app.emit("tray-select-game", "projectDiablo2"); }
-        "game-torchlightInfinite" => { let _ = app.emit("tray-select-game", "torchlightInfinite"); }
+        "game-poe" => {
+            let _ = app.emit("tray-select-game", "poe");
+        }
+        "game-poe2" => {
+            let _ = app.emit("tray-select-game", "poe2");
+        }
+        "game-diablo4" => {
+            let _ = app.emit("tray-select-game", "diablo4");
+        }
+        "game-lastEpoch" => {
+            let _ = app.emit("tray-select-game", "lastEpoch");
+        }
+        "game-diablo2Resurrected" => {
+            let _ = app.emit("tray-select-game", "diablo2Resurrected");
+        }
+        "game-projectDiablo2" => {
+            let _ = app.emit("tray-select-game", "projectDiablo2");
+        }
+        "game-torchlightInfinite" => {
+            let _ = app.emit("tray-select-game", "torchlightInfinite");
+        }
         _ => {}
     }
 }
@@ -55,7 +74,9 @@ pub fn create(app: &mut App) -> tauri::Result<()> {
         .menu(&menu)
         .tooltip("ARPG Seasons")
         .on_menu_event(|app, event| handle_menu(app, event.id().as_ref()));
-    if let Some(icon) = app.default_window_icon() { tray = tray.icon(icon.clone()); }
+    if let Some(icon) = app.default_window_icon() {
+        tray = tray.icon(icon.clone());
+    }
     tray.build(app)?;
     Ok(())
 }
