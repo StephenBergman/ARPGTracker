@@ -4,3 +4,5 @@
 .divider::after { background: linear-gradient(90deg, var(--color-border), transparent); }
 .divider span { width: 5px; height: 5px; border: 1px solid var(--color-accent-dim); transform: rotate(45deg); }
 .source { margin: 9px 0 0; color: #56524c; font-size: 0.52rem; letter-spacing: 0.07em; text-align: center; text-transform: uppercase; }
+:global([data-widget="true"][data-mode="expanded"]) .content { padding-top: 16px; padding-bottom: 16px; }
+:global([data-widget="true"][data-mode="expanded"]) .divider { margin-top: 15px; margin-bottom: 14px; }

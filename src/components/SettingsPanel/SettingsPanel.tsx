@@ -11,8 +11,8 @@ function ToggleRow({ label, checked, onChange, description }: ToggleRowProps) {
 }
 
 interface SettingsPanelProps {
-  displayMode: DisplayMode; alwaysOnTop: boolean; widgetMode: boolean; launchAtStartup: boolean; startupSyncStatus: StartupSyncStatus; showSeconds: boolean; showSeasonProgress: boolean; lastUpdated: string; isRefreshing: boolean; appUpdater: AppUpdaterState;
-  onDisplayMode: (mode: DisplayMode) => void; onAlwaysOnTop: (value: boolean) => void; onWidgetMode: (value: boolean) => void; onLaunchAtStartup: (value: boolean) => void; onShowSeconds: (value: boolean) => void; onShowSeasonProgress: (value: boolean) => void; onRefresh: () => void; onClose: () => void;
+  displayMode: DisplayMode; alwaysOnTop: boolean; widgetMode: boolean; positionLocked: boolean; launchAtStartup: boolean; startupSyncStatus: StartupSyncStatus; showSeconds: boolean; showSeasonProgress: boolean; lastUpdated: string; isRefreshing: boolean; appUpdater: AppUpdaterState;
+  onDisplayMode: (mode: DisplayMode) => void; onAlwaysOnTop: (value: boolean) => void; onWidgetMode: (value: boolean) => void; onPositionLocked: (value: boolean) => void; onLaunchAtStartup: (value: boolean) => void; onShowSeconds: (value: boolean) => void; onShowSeasonProgress: (value: boolean) => void; onRefresh: () => void; onClose: () => void;
 }
 
 export function SettingsPanel(props: SettingsPanelProps) {
@@ -40,6 +40,7 @@ export function SettingsPanel(props: SettingsPanelProps) {
     <div className={styles.group}><h3>General</h3>
       <ToggleRow label="Launch with Windows" checked={props.launchAtStartup} onChange={props.onLaunchAtStartup} description={startupDescription} />
       <ToggleRow label="Widget mode" checked={props.widgetMode} onChange={props.onWidgetMode} description="Hide from the taskbar and manage from the system tray" />
+      <ToggleRow label="Lock position" checked={props.positionLocked} onChange={props.onPositionLocked} description="Prevent accidental dragging" />
       <ToggleRow label="Always on top" checked={props.alwaysOnTop} onChange={props.onAlwaysOnTop} />
       <ToggleRow label="Compact mode" checked={props.displayMode === "compact"} onChange={(value) => props.onDisplayMode(value ? "compact" : "expanded")} />
     </div>

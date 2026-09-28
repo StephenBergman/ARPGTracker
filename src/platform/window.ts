@@ -5,8 +5,8 @@ export async function minimizeMainWindow(): Promise<void> { await getCurrentWind
 export async function startDraggingMainWindow(): Promise<void> { try { await getCurrentWindow().startDragging(); } catch { /* Browser preview. */ } }
 // Phase 7 can replace this implementation with hide-to-tray behavior.
 export async function closeMainWindow(): Promise<void> { await getCurrentWindow().close(); }
-export async function setWidgetDisplayMode(mode: DisplayMode): Promise<void> {
-  try { await getCurrentWindow().setSize(new LogicalSize(430, mode === "compact" ? 136 : 620)); }
+export async function setWidgetDisplayMode(mode: DisplayMode, widgetMode = false): Promise<void> {
+  try { await getCurrentWindow().setSize(new LogicalSize(430, mode === "compact" ? 136 : widgetMode ? 560 : 620)); }
   catch { /* Browser preview has no native window; Tauri errors are non-fatal. */ }
 }
 export async function setWidgetAlwaysOnTop(value: boolean): Promise<void> { try { await getCurrentWindow().setAlwaysOnTop(value); } catch { /* Browser preview. */ } }

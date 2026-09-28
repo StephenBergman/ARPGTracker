@@ -17,6 +17,12 @@ fn handle_menu(app: &AppHandle, id: &str) {
         "always-on-top" => {
             let _ = app.emit("tray-toggle-always-on-top", ());
         }
+        "widget-mode" => {
+            let _ = app.emit("tray-toggle-widget-mode", ());
+        }
+        "lock-position" => {
+            let _ = app.emit("tray-toggle-position-lock", ());
+        }
         "refresh" => {
             let _ = app.emit("tray-refresh-data", ());
         }
@@ -56,6 +62,8 @@ pub fn create(app: &mut App) -> tauri::Result<()> {
         .separator()
         .text("compact", "Toggle Compact Mode")
         .text("always-on-top", "Toggle Always on Top")
+        .text("widget-mode", "Toggle Widget Mode")
+        .text("lock-position", "Lock / Unlock Position")
         .separator()
         .text("game-poe", "Path of Exile")
         .text("game-poe2", "Path of Exile 2")

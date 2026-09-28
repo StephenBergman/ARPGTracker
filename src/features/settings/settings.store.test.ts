@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { loadAlwaysOnTop, loadDisplayMode, loadLaunchAtStartup, loadSelectedGame, loadShowSeasonProgress, loadShowSeconds, loadWidgetMode, loadWindowPosition, saveAlwaysOnTop, saveDisplayMode, saveLaunchAtStartup, saveSelectedGame, saveShowSeasonProgress, saveShowSeconds, saveWidgetMode, saveWindowPosition } from "./settings.store";
+import { loadAlwaysOnTop, loadDisplayMode, loadLaunchAtStartup, loadPositionLocked, loadSelectedGame, loadShowSeasonProgress, loadShowSeconds, loadWidgetMode, loadWindowPosition, saveAlwaysOnTop, saveDisplayMode, saveLaunchAtStartup, savePositionLocked, saveSelectedGame, saveShowSeasonProgress, saveShowSeconds, saveWidgetMode, saveWindowPosition } from "./settings.store";
 
 class MemoryStorage {
   value: string | null = null;
@@ -45,6 +45,7 @@ describe("display mode storage", () => {
     expect(loadShowSeconds(storage)).toBe(true);
     expect(loadShowSeasonProgress(storage)).toBe(true);
     expect(loadWidgetMode(storage)).toBe(true);
+    expect(loadPositionLocked(storage)).toBe(false);
     saveLaunchAtStartup(true, storage);
     expect(loadLaunchAtStartup(storage)).toBe(true);
     saveShowSeconds(false, storage);
@@ -53,5 +54,7 @@ describe("display mode storage", () => {
     expect(loadShowSeasonProgress(storage)).toBe(false);
     saveWidgetMode(false, storage);
     expect(loadWidgetMode(storage)).toBe(false);
+    savePositionLocked(true, storage);
+    expect(loadPositionLocked(storage)).toBe(true);
   });
 });

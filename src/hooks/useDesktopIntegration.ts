@@ -1,20 +1,22 @@
 import { useEffect, useState } from "react";
 import { listen } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { loadAlwaysOnTop, loadWidgetMode, loadWindowPosition, saveAlwaysOnTop, saveSelectedGame, saveWidgetMode, saveWindowPosition } from "../features/settings/settings.store";
+import { loadAlwaysOnTop, loadPositionLocked, loadWidgetMode, loadWindowPosition, saveAlwaysOnTop, savePositionLocked, saveSelectedGame, saveWidgetMode, saveWindowPosition } from "../features/settings/settings.store";
 import type { DisplayMode } from "../features/settings/settings.types";
 import { GAME_IDS, type GameId } from "../features/seasons/season.types";
-import { restoreWidgetPosition, setWidgetAlwaysOnTop, setWidgetMode } from "../platform/window";
+import { restoreWidgetPosition, setWidgetAlwaysOnTop, setWidgetDisplayMode, setWidgetMode } from "../platform/window";
 
 interface DesktopIntegrationOptions { selectedGameId: GameId; setSelectedGameId: (id: GameId) => void; displayMode: DisplayMode; setDisplayMode: (mode: DisplayMode) => void; refresh: () => Promise<void>; openSettings: () => void; }
 
 export function useDesktopIntegration(options: DesktopIntegrationOptions) {
   const [alwaysOnTop, setAlwaysOnTop] = useState(loadAlwaysOnTop);
   const [widgetMode, setWidgetModeEnabled] = useState(loadWidgetMode);
+  const [positionLocked, setPositionLocked] = useState(loadPositionLocked);
 
   useEffect(() => { saveSelectedGame(options.selectedGameId); }, [options.selectedGameId]);
   useEffect(() => { saveAlwaysOnTop(alwaysOnTop); void setWidgetAlwaysOnTop(alwaysOnTop); }, [alwaysOnTop]);
-  useEffect(() => { saveWidgetMode(widgetMode); void setWidgetMode(widgetMode); }, [widgetMode]);
+  useEffect(() => { saveWidgetMode(widgetMode); void setWidgetMode(widgetMode); void setWidgetDisplayMode(options.displayMode, widgetMode); }, [options.displayMode, widgetMode]);
+  useEffect(() => savePositionLocked(positionLocked), [positionLocked]);
 
   useEffect(() => {
     let disposed = false;
@@ -27,6 +29,8 @@ export function useDesktopIntegration(options: DesktopIntegrationOptions) {
         unlisteners.push(await listen<string>("tray-select-game", ({ payload }) => { const id = GAME_IDS.find((gameId) => gameId === payload); if (id) options.setSelectedGameId(id); }));
         unlisteners.push(await listen("tray-toggle-compact", () => options.setDisplayMode(options.displayMode === "compact" ? "expanded" : "compact")));
         unlisteners.push(await listen("tray-toggle-always-on-top", () => setAlwaysOnTop((value) => !value)));
+        unlisteners.push(await listen("tray-toggle-widget-mode", () => setWidgetModeEnabled((value) => !value)));
+        unlisteners.push(await listen("tray-toggle-position-lock", () => setPositionLocked((value) => !value)));
         unlisteners.push(await listen("tray-refresh-data", () => { void options.refresh(); }));
         unlisteners.push(await listen("tray-open-settings", options.openSettings));
       } catch { /* Browser preview has no native event bridge. */ }
@@ -34,5 +38,5 @@ export function useDesktopIntegration(options: DesktopIntegrationOptions) {
     return () => { disposed = true; for (const unlisten of unlisteners) unlisten(); };
   }, [options.displayMode, options.openSettings, options.refresh, options.setDisplayMode, options.setSelectedGameId]);
 
-  return { alwaysOnTop, setAlwaysOnTop, widgetMode, setWidgetMode: setWidgetModeEnabled };
+  return { alwaysOnTop, setAlwaysOnTop, widgetMode, setWidgetMode: setWidgetModeEnabled, positionLocked, setPositionLocked };
 }

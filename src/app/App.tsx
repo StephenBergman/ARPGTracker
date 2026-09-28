@@ -25,13 +25,13 @@ export function App() {
   const appUpdater = useAppUpdater();
   const { dataset, origin, refresh, isRefreshing } = useSeasonData();
   const openSettings = useCallback(() => { setDisplayMode("expanded"); setSettingsOpen(true); }, [setDisplayMode]);
-  const { alwaysOnTop, setAlwaysOnTop, widgetMode, setWidgetMode } = useDesktopIntegration({ selectedGameId, setSelectedGameId, displayMode, setDisplayMode, refresh, openSettings });
+  const { alwaysOnTop, setAlwaysOnTop, widgetMode, setWidgetMode, positionLocked, setPositionLocked } = useDesktopIntegration({ selectedGameId, setSelectedGameId, displayMode, setDisplayMode, refresh, openSettings });
   const selectedSeason = dataset.games[selectedGameId];
   const now = Date.now();
   const gameDefinition = GAME_DEFINITIONS.find((game) => game.id === selectedGameId) ?? GAME_DEFINITIONS[0];
   const setModeFromSettings = (mode: "compact" | "expanded") => { setDisplayMode(mode); if (mode === "compact") setSettingsOpen(false); };
   return (
-    <WidgetShell theme={GAME_THEMES[selectedGameId]} displayMode={displayMode} alwaysOnTop={alwaysOnTop} onToggleDisplayMode={toggleDisplayMode} onToggleAlwaysOnTop={() => setAlwaysOnTop((value) => !value)} onOpenSettings={openSettings}>
+    <WidgetShell theme={GAME_THEMES[selectedGameId]} displayMode={displayMode} alwaysOnTop={alwaysOnTop} widgetMode={widgetMode} positionLocked={positionLocked} onToggleDisplayMode={toggleDisplayMode} onToggleAlwaysOnTop={() => setAlwaysOnTop((value) => !value)} onTogglePositionLock={() => setPositionLocked((value) => !value)} onOpenSettings={openSettings}>
       {displayMode === "compact" ? <CompactWidget season={selectedSeason} shortName={gameDefinition.shortName} checkingForUpdate={isRefreshing} onElapsed={() => { void refresh(); }} /> : <><GameSelector games={GAME_DEFINITIONS} selectedGameId={selectedGameId} onSelect={setSelectedGameId} />
       <main className={styles.content}>
         <CurrentSeason season={selectedSeason} now={now} />
@@ -40,7 +40,7 @@ export function App() {
         {preferences.showSeasonProgress && <SeasonProgress season={selectedSeason} now={now} />}
         <p className={styles.source}>Data source: {origin}{isRefreshing ? " / checking for updates" : ""}</p>
       </main></>}
-      {settingsOpen && <SettingsPanel displayMode={displayMode} alwaysOnTop={alwaysOnTop} widgetMode={widgetMode} launchAtStartup={preferences.launchAtStartup} startupSyncStatus={preferences.startupSyncStatus} showSeconds={preferences.showSeconds} showSeasonProgress={preferences.showSeasonProgress} lastUpdated={dataset.updatedAt} isRefreshing={isRefreshing} appUpdater={appUpdater} onDisplayMode={setModeFromSettings} onAlwaysOnTop={setAlwaysOnTop} onWidgetMode={setWidgetMode} onLaunchAtStartup={preferences.setLaunchAtStartup} onShowSeconds={preferences.setShowSeconds} onShowSeasonProgress={preferences.setShowSeasonProgress} onRefresh={() => { void refresh(); }} onClose={() => setSettingsOpen(false)} />}
+      {settingsOpen && <SettingsPanel displayMode={displayMode} alwaysOnTop={alwaysOnTop} widgetMode={widgetMode} positionLocked={positionLocked} launchAtStartup={preferences.launchAtStartup} startupSyncStatus={preferences.startupSyncStatus} showSeconds={preferences.showSeconds} showSeasonProgress={preferences.showSeasonProgress} lastUpdated={dataset.updatedAt} isRefreshing={isRefreshing} appUpdater={appUpdater} onDisplayMode={setModeFromSettings} onAlwaysOnTop={setAlwaysOnTop} onWidgetMode={setWidgetMode} onPositionLocked={setPositionLocked} onLaunchAtStartup={preferences.setLaunchAtStartup} onShowSeconds={preferences.setShowSeconds} onShowSeasonProgress={preferences.setShowSeasonProgress} onRefresh={() => { void refresh(); }} onClose={() => setSettingsOpen(false)} />}
     </WidgetShell>
   );
 }

@@ -10,6 +10,7 @@ const ALWAYS_ON_TOP_KEY = "arpg-seasons.always-on-top.v1";
 const WINDOW_POSITION_KEY = "arpg-seasons.window-position.v1";
 const LAUNCH_AT_STARTUP_KEY = "arpg-seasons.launch-at-startup.v1";
 const WIDGET_MODE_KEY = "arpg-seasons.widget-mode.v1";
+const POSITION_LOCKED_KEY = "arpg-seasons.position-locked.v1";
 const SHOW_SECONDS_KEY = "arpg-seasons.show-seconds.v1";
 const SHOW_PROGRESS_KEY = "arpg-seasons.show-progress.v1";
 
@@ -49,6 +50,8 @@ export const loadLaunchAtStartup = (storage: StorageReader = localStorage) => lo
 export const saveLaunchAtStartup = (value: boolean, storage: StorageReader = localStorage) => saveBoolean(LAUNCH_AT_STARTUP_KEY, value, storage);
 export const loadWidgetMode = (storage: StorageReader = localStorage) => loadBoolean(WIDGET_MODE_KEY, true, storage);
 export const saveWidgetMode = (value: boolean, storage: StorageReader = localStorage) => saveBoolean(WIDGET_MODE_KEY, value, storage);
+export const loadPositionLocked = (storage: StorageReader = localStorage) => loadBoolean(POSITION_LOCKED_KEY, false, storage);
+export const savePositionLocked = (value: boolean, storage: StorageReader = localStorage) => saveBoolean(POSITION_LOCKED_KEY, value, storage);
 export const loadShowSeconds = (storage: StorageReader = localStorage) => loadBoolean(SHOW_SECONDS_KEY, true, storage);
 export const saveShowSeconds = (value: boolean, storage: StorageReader = localStorage) => saveBoolean(SHOW_SECONDS_KEY, value, storage);
 export const loadShowSeasonProgress = (storage: StorageReader = localStorage) => loadBoolean(SHOW_PROGRESS_KEY, true, storage);
