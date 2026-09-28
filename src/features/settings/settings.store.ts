@@ -8,6 +8,9 @@ interface StorageReader { getItem(key: string): string | null; setItem(key: stri
 const SELECTED_GAME_KEY = "arpg-seasons.selected-game.v1";
 const ALWAYS_ON_TOP_KEY = "arpg-seasons.always-on-top.v1";
 const WINDOW_POSITION_KEY = "arpg-seasons.window-position.v1";
+const LAUNCH_AT_STARTUP_KEY = "arpg-seasons.launch-at-startup.v1";
+const SHOW_SECONDS_KEY = "arpg-seasons.show-seconds.v1";
+const SHOW_PROGRESS_KEY = "arpg-seasons.show-progress.v1";
 
 export function loadDisplayMode(storage: StorageReader = localStorage): DisplayMode {
   try { return storage.getItem(DISPLAY_MODE_KEY) === "compact" ? "compact" : "expanded"; }
@@ -35,3 +38,15 @@ export function loadWindowPosition(storage: StorageReader = localStorage): Windo
   } catch { return null; }
 }
 export function saveWindowPosition(position: WindowPosition, storage: StorageReader = localStorage): void { try { storage.setItem(WINDOW_POSITION_KEY, JSON.stringify(position)); } catch { /* Non-fatal. */ } }
+
+function loadBoolean(key: string, fallback: boolean, storage: StorageReader): boolean {
+  try { const value = storage.getItem(key); return value === null ? fallback : value === "true"; }
+  catch { return fallback; }
+}
+function saveBoolean(key: string, value: boolean, storage: StorageReader): void { try { storage.setItem(key, String(value)); } catch { /* Non-fatal. */ } }
+export const loadLaunchAtStartup = (storage: StorageReader = localStorage) => loadBoolean(LAUNCH_AT_STARTUP_KEY, false, storage);
+export const saveLaunchAtStartup = (value: boolean, storage: StorageReader = localStorage) => saveBoolean(LAUNCH_AT_STARTUP_KEY, value, storage);
+export const loadShowSeconds = (storage: StorageReader = localStorage) => loadBoolean(SHOW_SECONDS_KEY, true, storage);
+export const saveShowSeconds = (value: boolean, storage: StorageReader = localStorage) => saveBoolean(SHOW_SECONDS_KEY, value, storage);
+export const loadShowSeasonProgress = (storage: StorageReader = localStorage) => loadBoolean(SHOW_PROGRESS_KEY, true, storage);
+export const saveShowSeasonProgress = (value: boolean, storage: StorageReader = localStorage) => saveBoolean(SHOW_PROGRESS_KEY, value, storage);

@@ -1,6 +1,6 @@
 # ARPG Seasons
 
-A lightweight Windows-first desktop widget for ARPG season information and countdowns. Phase 7 adds persistent native desktop integration and system tray workflows.
+A lightweight Windows-first desktop widget for ARPG season information and countdowns. Phase 9 adds native Windows login startup and single-instance protection.
 
 ## Stack
 
@@ -50,4 +50,6 @@ The expanded widget is data-driven across all configured games and handles confi
 
 Compact mode persists locally, changes the native window to a 430×136 widget, and presents the selected season and a minute-level countdown in two lines.
 
-The system tray can restore the widget, switch games, toggle compact mode or always-on-top, request fresh season data, and explicitly exit. Closing the window hides it to the tray. Selected game, display mode, always-on-top, and window position persist locally; positions from disconnected monitors are rejected and recentered on an available display. The full settings surface remains deferred to Phase 8.
+The system tray can restore the widget, switch games, open settings, toggle compact mode or always-on-top, request fresh season data, and explicitly exit. Closing the window hides it to the tray. Selected game, display mode, always-on-top, and window position persist locally; positions from disconnected monitors are rejected and recentered on an available display.
+
+The settings panel controls native launch-at-startup registration, always-on-top, compact mode, countdown seconds, season progress, and manual data refresh while showing the dataset timestamp. Startup is disabled by default and reconciled with the saved preference when the application opens. Single-instance protection restores and focuses the existing widget when another launch is attempted.

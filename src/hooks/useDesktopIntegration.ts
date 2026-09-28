@@ -6,7 +6,7 @@ import type { DisplayMode } from "../features/settings/settings.types";
 import { GAME_IDS, type GameId } from "../features/seasons/season.types";
 import { restoreWidgetPosition, setWidgetAlwaysOnTop } from "../platform/window";
 
-interface DesktopIntegrationOptions { selectedGameId: GameId; setSelectedGameId: (id: GameId) => void; displayMode: DisplayMode; setDisplayMode: (mode: DisplayMode) => void; refresh: () => Promise<void>; }
+interface DesktopIntegrationOptions { selectedGameId: GameId; setSelectedGameId: (id: GameId) => void; displayMode: DisplayMode; setDisplayMode: (mode: DisplayMode) => void; refresh: () => Promise<void>; openSettings: () => void; }
 
 export function useDesktopIntegration(options: DesktopIntegrationOptions) {
   const [alwaysOnTop, setAlwaysOnTop] = useState(loadAlwaysOnTop);
@@ -26,10 +26,11 @@ export function useDesktopIntegration(options: DesktopIntegrationOptions) {
         unlisteners.push(await listen("tray-toggle-compact", () => options.setDisplayMode(options.displayMode === "compact" ? "expanded" : "compact")));
         unlisteners.push(await listen("tray-toggle-always-on-top", () => setAlwaysOnTop((value) => !value)));
         unlisteners.push(await listen("tray-refresh-data", () => { void options.refresh(); }));
+        unlisteners.push(await listen("tray-open-settings", options.openSettings));
       } catch { /* Browser preview has no native event bridge. */ }
     })();
     return () => { disposed = true; for (const unlisten of unlisteners) unlisten(); };
-  }, [options.displayMode, options.refresh, options.setDisplayMode, options.setSelectedGameId]);
+  }, [options.displayMode, options.openSettings, options.refresh, options.setDisplayMode, options.setSelectedGameId]);
 
   return { alwaysOnTop, setAlwaysOnTop };
 }

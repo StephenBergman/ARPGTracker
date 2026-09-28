@@ -18,6 +18,7 @@ fn handle_menu(app: &AppHandle, id: &str) {
         "compact" => { let _ = app.emit("tray-toggle-compact", ()); }
         "always-on-top" => { let _ = app.emit("tray-toggle-always-on-top", ()); }
         "refresh" => { let _ = app.emit("tray-refresh-data", ()); }
+        "settings" => { show_main_window(app); let _ = app.emit("tray-open-settings", ()); }
         "exit" => app.exit(0),
         "game-poe" => { let _ = app.emit("tray-select-game", "poe"); }
         "game-poe2" => { let _ = app.emit("tray-select-game", "poe2"); }
@@ -45,6 +46,7 @@ pub fn create(app: &mut App) -> tauri::Result<()> {
         .text("game-projectDiablo2", "Project Diablo 2")
         .text("game-torchlightInfinite", "Torchlight: Infinite")
         .separator()
+        .text("settings", "Settings")
         .text("refresh", "Check Season Data")
         .text("exit", "Exit")
         .build()?;

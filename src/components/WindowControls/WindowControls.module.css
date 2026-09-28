@@ -5,4 +5,5 @@
 .controls .mode { color: var(--color-accent-dim); font-size: .72rem; }
 .controls .pin { color: var(--color-text-muted); font-size: .48rem; }
 .controls .pin[data-active="true"] { color: var(--color-accent); text-shadow: 0 0 7px var(--color-glow); }
+.controls .settings { color: var(--color-text-muted); font-size: .82rem; }
 .controls button:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -3px; }

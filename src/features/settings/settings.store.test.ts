@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { loadAlwaysOnTop, loadDisplayMode, loadSelectedGame, loadWindowPosition, saveAlwaysOnTop, saveDisplayMode, saveSelectedGame, saveWindowPosition } from "./settings.store";
+import { loadAlwaysOnTop, loadDisplayMode, loadLaunchAtStartup, loadSelectedGame, loadShowSeasonProgress, loadShowSeconds, loadWindowPosition, saveAlwaysOnTop, saveDisplayMode, saveLaunchAtStartup, saveSelectedGame, saveShowSeasonProgress, saveShowSeconds, saveWindowPosition } from "./settings.store";
 
 class MemoryStorage {
   value: string | null = null;
@@ -37,5 +37,18 @@ describe("display mode storage", () => {
     expect(loadSelectedGame(storage)).toBe("poe2");
     storage.value = '{"x":"bad","y":2}';
     expect(loadWindowPosition(storage)).toBeNull();
+  });
+
+  it("uses sane display defaults and persists overrides", () => {
+    const storage = new MemoryStorage();
+    expect(loadLaunchAtStartup(storage)).toBe(false);
+    expect(loadShowSeconds(storage)).toBe(true);
+    expect(loadShowSeasonProgress(storage)).toBe(true);
+    saveLaunchAtStartup(true, storage);
+    expect(loadLaunchAtStartup(storage)).toBe(true);
+    saveShowSeconds(false, storage);
+    expect(loadShowSeconds(storage)).toBe(false);
+    saveShowSeasonProgress(false, storage);
+    expect(loadShowSeasonProgress(storage)).toBe(false);
   });
 });
