@@ -25,7 +25,7 @@ export function App() {
   const appUpdater = useAppUpdater();
   const { dataset, origin, refresh, isRefreshing } = useSeasonData();
   const openSettings = useCallback(() => { setDisplayMode("expanded"); setSettingsOpen(true); }, [setDisplayMode]);
-  const { alwaysOnTop, setAlwaysOnTop } = useDesktopIntegration({ selectedGameId, setSelectedGameId, displayMode, setDisplayMode, refresh, openSettings });
+  const { alwaysOnTop, setAlwaysOnTop, widgetMode, setWidgetMode } = useDesktopIntegration({ selectedGameId, setSelectedGameId, displayMode, setDisplayMode, refresh, openSettings });
   const selectedSeason = dataset.games[selectedGameId];
   const now = Date.now();
   const gameDefinition = GAME_DEFINITIONS.find((game) => game.id === selectedGameId) ?? GAME_DEFINITIONS[0];
@@ -40,7 +40,7 @@ export function App() {
         {preferences.showSeasonProgress && <SeasonProgress season={selectedSeason} now={now} />}
         <p className={styles.source}>Data source: {origin}{isRefreshing ? " / checking for updates" : ""}</p>
       </main></>}
-      {settingsOpen && <SettingsPanel displayMode={displayMode} alwaysOnTop={alwaysOnTop} launchAtStartup={preferences.launchAtStartup} startupSyncStatus={preferences.startupSyncStatus} showSeconds={preferences.showSeconds} showSeasonProgress={preferences.showSeasonProgress} lastUpdated={dataset.updatedAt} isRefreshing={isRefreshing} appUpdater={appUpdater} onDisplayMode={setModeFromSettings} onAlwaysOnTop={setAlwaysOnTop} onLaunchAtStartup={preferences.setLaunchAtStartup} onShowSeconds={preferences.setShowSeconds} onShowSeasonProgress={preferences.setShowSeasonProgress} onRefresh={() => { void refresh(); }} onClose={() => setSettingsOpen(false)} />}
+      {settingsOpen && <SettingsPanel displayMode={displayMode} alwaysOnTop={alwaysOnTop} widgetMode={widgetMode} launchAtStartup={preferences.launchAtStartup} startupSyncStatus={preferences.startupSyncStatus} showSeconds={preferences.showSeconds} showSeasonProgress={preferences.showSeasonProgress} lastUpdated={dataset.updatedAt} isRefreshing={isRefreshing} appUpdater={appUpdater} onDisplayMode={setModeFromSettings} onAlwaysOnTop={setAlwaysOnTop} onWidgetMode={setWidgetMode} onLaunchAtStartup={preferences.setLaunchAtStartup} onShowSeconds={preferences.setShowSeconds} onShowSeasonProgress={preferences.setShowSeasonProgress} onRefresh={() => { void refresh(); }} onClose={() => setSettingsOpen(false)} />}
     </WidgetShell>
   );
 }

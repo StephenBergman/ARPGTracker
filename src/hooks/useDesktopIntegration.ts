@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
 import { listen } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { loadAlwaysOnTop, loadWindowPosition, saveAlwaysOnTop, saveSelectedGame, saveWindowPosition } from "../features/settings/settings.store";
+import { loadAlwaysOnTop, loadWidgetMode, loadWindowPosition, saveAlwaysOnTop, saveSelectedGame, saveWidgetMode, saveWindowPosition } from "../features/settings/settings.store";
 import type { DisplayMode } from "../features/settings/settings.types";
 import { GAME_IDS, type GameId } from "../features/seasons/season.types";
-import { restoreWidgetPosition, setWidgetAlwaysOnTop } from "../platform/window";
+import { restoreWidgetPosition, setWidgetAlwaysOnTop, setWidgetMode } from "../platform/window";
 
 interface DesktopIntegrationOptions { selectedGameId: GameId; setSelectedGameId: (id: GameId) => void; displayMode: DisplayMode; setDisplayMode: (mode: DisplayMode) => void; refresh: () => Promise<void>; openSettings: () => void; }
 
 export function useDesktopIntegration(options: DesktopIntegrationOptions) {
   const [alwaysOnTop, setAlwaysOnTop] = useState(loadAlwaysOnTop);
+  const [widgetMode, setWidgetModeEnabled] = useState(loadWidgetMode);
 
   useEffect(() => { saveSelectedGame(options.selectedGameId); }, [options.selectedGameId]);
   useEffect(() => { saveAlwaysOnTop(alwaysOnTop); void setWidgetAlwaysOnTop(alwaysOnTop); }, [alwaysOnTop]);
+  useEffect(() => { saveWidgetMode(widgetMode); void setWidgetMode(widgetMode); }, [widgetMode]);
 
   useEffect(() => {
     let disposed = false;
@@ -32,5 +34,5 @@ export function useDesktopIntegration(options: DesktopIntegrationOptions) {
     return () => { disposed = true; for (const unlisten of unlisteners) unlisten(); };
   }, [options.displayMode, options.openSettings, options.refresh, options.setDisplayMode, options.setSelectedGameId]);
 
-  return { alwaysOnTop, setAlwaysOnTop };
+  return { alwaysOnTop, setAlwaysOnTop, widgetMode, setWidgetMode: setWidgetModeEnabled };
 }

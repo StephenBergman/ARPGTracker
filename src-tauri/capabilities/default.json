@@ -11,6 +11,7 @@
     "core:window:allow-set-position",
     "core:window:allow-center",
     "core:window:allow-set-always-on-top",
+    "core:window:allow-set-skip-taskbar",
     "core:window:allow-start-dragging",
     "autostart:allow-enable",
     "autostart:allow-disable",

@@ -10,6 +10,7 @@ export async function setWidgetDisplayMode(mode: DisplayMode): Promise<void> {
   catch { /* Browser preview has no native window; Tauri errors are non-fatal. */ }
 }
 export async function setWidgetAlwaysOnTop(value: boolean): Promise<void> { try { await getCurrentWindow().setAlwaysOnTop(value); } catch { /* Browser preview. */ } }
+export async function setWidgetMode(value: boolean): Promise<void> { try { await getCurrentWindow().setSkipTaskbar(value); } catch { /* Browser preview. */ } }
 
 export function isPositionOnAvailableDisplay(position: { x: number; y: number }, monitors: readonly Monitor[]): boolean {
   return monitors.some((monitor) => position.x >= monitor.position.x - 80 && position.x < monitor.position.x + monitor.size.width - 40 && position.y >= monitor.position.y - 40 && position.y < monitor.position.y + monitor.size.height - 40);
