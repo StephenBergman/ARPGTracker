@@ -1,0 +1,9 @@
+.section { text-align: center; }
+.heading p, .facts span { color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.16em; }
+.heading p { margin: 0 0 9px; font-size: 0.62rem; font-weight: 700; }
+.heading h1 { margin: 0; color: var(--color-text-bright); font-family: var(--font-display); font-size: clamp(1.35rem, 6vw, 1.8rem); font-weight: 500; letter-spacing: 0.045em; text-transform: uppercase; }
+.facts { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 23px; text-align: left; }
+.facts div { display: flex; min-width: 0; flex-direction: column; gap: 7px; }
+.facts div + div { border-left: 1px solid var(--color-border); padding-left: 20px; }
+.facts span { font-size: 0.55rem; font-weight: 700; }
+.facts strong { overflow: hidden; color: var(--color-text); font: 500 0.82rem/1.35 var(--font-ui); text-overflow: ellipsis; white-space: nowrap; }

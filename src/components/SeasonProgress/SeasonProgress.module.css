@@ -1,0 +1,5 @@
+.section { margin-top: auto; padding-top: 19px; }
+.label { display: flex; justify-content: space-between; margin-bottom: 8px; color: var(--color-text-muted); font-size: 0.54rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+.label strong { color: var(--color-accent); font-weight: 600; }
+.track { height: 3px; overflow: hidden; border-radius: 2px; background: rgba(255, 255, 255, 0.055); }
+.track span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--color-accent-dim), var(--color-accent)); box-shadow: 0 0 7px var(--color-glow); transition: width 300ms ease, background 240ms ease; }

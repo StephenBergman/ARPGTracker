@@ -1,0 +1,11 @@
+import type { GameId } from "../features/seasons/season.types";
+import { diablo2ResurrectedTheme } from "./diablo2Resurrected";
+import { diablo4Theme } from "./diablo4";
+import { lastEpochTheme } from "./lastEpoch";
+import { poeTheme } from "./poe";
+import { poe2Theme } from "./poe2";
+import { projectDiablo2Theme } from "./projectDiablo2";
+import type { GameTheme } from "./theme.types";
+import { torchlightInfiniteTheme } from "./torchlightInfinite";
+export const GAME_THEMES: Record<GameId, GameTheme> = { poe: poeTheme, poe2: poe2Theme, diablo4: diablo4Theme, lastEpoch: lastEpochTheme, diablo2Resurrected: diablo2ResurrectedTheme, projectDiablo2: projectDiablo2Theme, torchlightInfinite: torchlightInfiniteTheme };
+export type { GameTheme } from "./theme.types";

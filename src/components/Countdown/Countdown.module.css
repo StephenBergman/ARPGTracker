@@ -1,0 +1,13 @@
+.section { text-align: center; }
+.eyebrow { margin: 0 0 8px; color: var(--color-text-muted); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+.date { margin: 0; color: var(--color-text); font-size: 0.84rem; }
+.unknown { margin: 19px 0 16px; color: var(--color-text); font: 500 0.86rem/1.4 var(--font-ui); }
+.countdown { display: grid; grid-template-columns: repeat(3, 1fr); margin: 17px 0 15px; }
+.countdown[data-units="4"] { grid-template-columns: repeat(4, 1fr); }
+.countdown div { display: flex; flex-direction: column; gap: 4px; }
+.countdown div + div { border-left: 1px solid var(--color-border); }
+.countdown strong { color: var(--color-accent); font: 400 1.65rem/1 var(--font-display); letter-spacing: 0.035em; }
+.countdown span { color: var(--color-text-muted); font-size: 0.52rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; }
+.transition { display: flex; flex-direction: column; gap: 6px; margin: 20px 0 17px; }
+.transition strong { color: var(--color-accent); font-size: 0.82rem; font-weight: 500; }
+.transition span { color: var(--color-text-muted); font-size: 0.68rem; }

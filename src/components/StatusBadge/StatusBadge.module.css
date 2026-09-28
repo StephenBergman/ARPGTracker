@@ -1,0 +1,7 @@
+.badge { display: inline-flex; align-items: center; gap: 7px; color: var(--color-text-muted); font-size: 0.68rem; letter-spacing: 0.045em; }
+.icon { width: 7px; height: 7px; border: 1px solid currentColor; border-radius: 50%; }
+.badge[data-status="confirmed"] { color: #aeb99e; }
+.badge[data-status="confirmed"] .icon { border: 0; background: #7e936d; box-shadow: 0 0 8px rgba(126, 147, 109, 0.4); }
+.badge[data-status="estimated"] { color: #c4a871; }
+.badge[data-status="estimated"] .icon { border-right-color: transparent; transform: rotate(-35deg); }
+.badge[data-status="unknown"] { color: #89847d; }

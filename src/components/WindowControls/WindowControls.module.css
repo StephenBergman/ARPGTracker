@@ -1,0 +1,8 @@
+.controls { display: flex; align-self: stretch; }
+.controls button { width: 42px; border: 0; background: transparent; color: #77736d; font: 400 0.86rem/1 var(--font-ui); cursor: pointer; transition: color 120ms ease, background-color 120ms ease; }
+.controls button:hover { background: rgba(255, 255, 255, 0.055); color: var(--color-text-bright); }
+.controls .close:hover { background: rgba(116, 31, 27, 0.72); }
+.controls .mode { color: var(--color-accent-dim); font-size: .72rem; }
+.controls .pin { color: var(--color-text-muted); font-size: .48rem; }
+.controls .pin[data-active="true"] { color: var(--color-accent); text-shadow: 0 0 7px var(--color-glow); }
+.controls button:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -3px; }

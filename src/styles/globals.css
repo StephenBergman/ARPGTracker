@@ -1,0 +1,6 @@
+@import "./variables.css";
+* { box-sizing: border-box; }
+html, body, #root { min-width: 360px; min-height: 100%; margin: 0; }
+body { min-height: 100vh; overflow: hidden; background: transparent; color: var(--color-text); font-family: var(--font-ui); -webkit-font-smoothing: antialiased; }
+button { font: inherit; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; } }

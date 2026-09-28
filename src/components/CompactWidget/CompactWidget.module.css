@@ -1,0 +1,5 @@
+.compact { display: flex; min-width: 0; flex: 1; flex-direction: column; justify-content: center; gap: 8px; padding: 10px 18px 13px; }
+.compact p { display: flex; min-width: 0; align-items: center; gap: 8px; margin: 0; color: var(--color-text); font-size: 0.81rem; letter-spacing: 0.015em; white-space: nowrap; }
+.compact strong { flex: none; color: var(--color-accent); font-size: 0.67rem; letter-spacing: 0.09em; }
+.compact p span:last-child { overflow: hidden; text-overflow: ellipsis; }
+.compact .next { color: var(--color-text-muted); font-size: 0.69rem; letter-spacing: 0.045em; }
