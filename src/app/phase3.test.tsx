@@ -21,13 +21,13 @@ describe("Phase 3 season presentation", () => {
     const season = dataset.games[id];
     const markup = renderToStaticMarkup(<><CurrentSeason season={season} now={now} /><Countdown nextSeason={season.nextSeason} /><SeasonProgress season={season} now={now} /></>);
     expect(markup).toContain(season.gameName);
-    expect(markup).toContain(season.currentSeason.title);
+    expect(markup).toContain(season.currentSeason.title.replace(/'/g, "&#x27;"));
     expect(markup).not.toMatch(/NaN|Invalid Date|undefined|-1 days/);
   });
 
   it("distinguishes confirmed, estimated, and unknown next-season states", () => {
-    expect(renderToStaticMarkup(<Countdown nextSeason={dataset.games.diablo4.nextSeason} />)).toContain("Confirmed");
-    expect(renderToStaticMarkup(<Countdown nextSeason={dataset.games.lastEpoch.nextSeason} />)).toContain("Estimated");
+    expect(renderToStaticMarkup(<Countdown nextSeason={{ title: "Confirmed test", startDate: "2099-01-01T00:00:00Z", status: "confirmed" }} />)).toContain("Confirmed");
+    expect(renderToStaticMarkup(<Countdown nextSeason={{ title: "Estimated test", startDate: "2099-01-01T00:00:00Z", status: "estimated" }} />)).toContain("Estimated");
     expect(renderToStaticMarkup(<Countdown nextSeason={dataset.games.poe.nextSeason} />)).toContain("Next season has not been announced");
   });
 });
