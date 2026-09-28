@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { listen } from "@tauri-apps/api/event";
+import { emit, listen } from "@tauri-apps/api/event";
 import { availableMonitors, getCurrentWindow } from "@tauri-apps/api/window";
 import { loadAlwaysOnTop, loadPositionLocked, loadWidgetMode, loadWidgetPlacement, loadWindowPosition, saveAlwaysOnTop, savePositionLocked, saveSelectedGame, saveWidgetMode, saveWidgetPlacement, saveWindowPosition } from "../features/settings/settings.store";
 import type { DisplayMode } from "../features/settings/settings.types";
 import { GAME_IDS, type GameId } from "../features/seasons/season.types";
-import { applyWidgetPlacement, detectWidgetPlacement, restoreWidgetPosition, setWidgetAlwaysOnTop, setWidgetDisplayMode, setWidgetMode } from "../platform/window";
+import { applyWidgetPlacement, detectWidgetPlacement, hideSnapOverlay, restoreWidgetPosition, setWidgetAlwaysOnTop, setWidgetDisplayMode, setWidgetMode } from "../platform/window";
 
 interface DesktopIntegrationOptions { selectedGameId: GameId; setSelectedGameId: (id: GameId) => void; displayMode: DisplayMode; setDisplayMode: (mode: DisplayMode) => void; settingsOpen: boolean; refresh: () => Promise<void>; openSettings: () => void; }
 
@@ -28,8 +28,30 @@ export function useDesktopIntegration(options: DesktopIntegrationOptions) {
 
   useEffect(() => {
     let disposed = false;
-    let snapTimer: number | undefined;
+    let dragging = false;
+    let latestPosition: { x: number; y: number } | null = null;
     const unlisteners: Array<() => void> = [];
+    const previewPlacement = async (position: { x: number; y: number }) => {
+      try {
+        const appWindow = getCurrentWindow();
+        const placement = detectWidgetPlacement(position, await appWindow.outerSize(), await availableMonitors());
+        await emit("widget-snap-preview", placement);
+        return placement;
+      } catch { return "free" as const; }
+    };
+    const onDragStart = () => { dragging = true; latestPosition = null; };
+    const onDragEnd = () => {
+      dragging = false;
+      void (async () => {
+        try {
+          const position = latestPosition ?? await getCurrentWindow().outerPosition();
+          const placement = await previewPlacement(position);
+          if (!disposed) setWidgetPlacement(placement);
+        } finally { await hideSnapOverlay(); }
+      })();
+    };
+    window.addEventListener("widget-native-drag-start", onDragStart);
+    window.addEventListener("widget-native-drag-end", onDragEnd);
     void (async () => {
       await restoreWidgetPosition(loadWindowPosition());
       if (widgetMode && !options.settingsOpen && options.displayMode === "expanded" && widgetPlacement !== "free") await applyWidgetPlacement(widgetPlacement);
@@ -37,17 +59,9 @@ export function useDesktopIntegration(options: DesktopIntegrationOptions) {
       try {
         unlisteners.push(await getCurrentWindow().onMoved(({ payload }) => {
           saveWindowPosition({ x: payload.x, y: payload.y });
-          if (!widgetMode || options.displayMode !== "expanded" || positionLocked) return;
-          if (snapTimer !== undefined) window.clearTimeout(snapTimer);
-          snapTimer = window.setTimeout(() => {
-            void (async () => {
-              try {
-                const appWindow = getCurrentWindow();
-                const placement = detectWidgetPlacement(payload, await appWindow.outerSize(), await availableMonitors());
-                if (!disposed) setWidgetPlacement(placement);
-              } catch { /* Browser preview. */ }
-            })();
-          }, 350);
+          if (!dragging || !widgetMode || options.displayMode !== "expanded" || positionLocked) return;
+          latestPosition = payload;
+          void previewPlacement(payload);
         }));
         unlisteners.push(await listen<string>("tray-select-game", ({ payload }) => { const id = GAME_IDS.find((gameId) => gameId === payload); if (id) options.setSelectedGameId(id); }));
         unlisteners.push(await listen("tray-toggle-compact", () => options.setDisplayMode(options.displayMode === "compact" ? "expanded" : "compact")));
@@ -58,7 +72,7 @@ export function useDesktopIntegration(options: DesktopIntegrationOptions) {
         unlisteners.push(await listen("tray-open-settings", options.openSettings));
       } catch { /* Browser preview has no native event bridge. */ }
     })();
-    return () => { disposed = true; if (snapTimer !== undefined) window.clearTimeout(snapTimer); for (const unlisten of unlisteners) unlisten(); };
+    return () => { disposed = true; window.removeEventListener("widget-native-drag-start", onDragStart); window.removeEventListener("widget-native-drag-end", onDragEnd); for (const unlisten of unlisteners) unlisten(); };
   }, [options.displayMode, options.openSettings, options.refresh, options.setDisplayMode, options.setSelectedGameId, options.settingsOpen, positionLocked, widgetMode, widgetPlacement]);
 
   return { alwaysOnTop, setAlwaysOnTop, widgetMode, setWidgetMode: setWidgetModeEnabled, positionLocked, setPositionLocked, widgetPlacement, setWidgetPlacement };

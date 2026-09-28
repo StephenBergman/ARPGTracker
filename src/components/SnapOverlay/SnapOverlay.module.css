@@ -1,0 +1,4 @@
+.overlay { display: grid; width: 100vw; height: 100vh; grid-template: 28% 44% 28% / 28% 44% 28%; gap: 8px; padding: 18px; background: rgba(0,0,0,.16); pointer-events: none; }
+.zone { display: grid; place-items: center; border: 2px solid rgba(198,159,85,.28); border-radius: 12px; background: rgba(20,18,15,.22); color: rgba(238,224,194,.62); font: 700 .72rem/1 var(--font-ui); letter-spacing: .12em; text-transform: uppercase; transition: border-color 90ms ease, background-color 90ms ease, box-shadow 90ms ease, color 90ms ease, transform 90ms ease; }
+.zone[data-active="true"] { border-color: #d6aa58; background: rgba(117,78,25,.42); box-shadow: inset 0 0 28px rgba(214,170,88,.22), 0 0 18px rgba(214,170,88,.18); color: #fff1cf; transform: scale(.985); }
+.zone[data-placement="free"] { border-style: dashed; }

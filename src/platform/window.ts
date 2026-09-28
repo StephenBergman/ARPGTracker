@@ -1,8 +1,30 @@
 import { LogicalPosition, LogicalSize } from "@tauri-apps/api/dpi";
 import { availableMonitors, currentMonitor, getCurrentWindow, PhysicalPosition, type Monitor } from "@tauri-apps/api/window";
+import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import type { DisplayMode, WidgetPlacement } from "../features/settings/settings.types";
 export async function minimizeMainWindow(): Promise<void> { await getCurrentWindow().minimize(); }
-export async function startDraggingMainWindow(): Promise<void> { try { await getCurrentWindow().startDragging(); } catch { /* Browser preview. */ } }
+const SNAP_OVERLAY_LABEL = "snap-overlay";
+async function showSnapOverlay(): Promise<void> {
+  try {
+    const existing = await WebviewWindow.getByLabel(SNAP_OVERLAY_LABEL);
+    if (existing) await existing.destroy();
+    const monitor = await currentMonitor();
+    if (!monitor) return;
+    const position = monitor.workArea.position.toLogical(monitor.scaleFactor);
+    const size = monitor.workArea.size.toLogical(monitor.scaleFactor);
+    const overlay = new WebviewWindow(SNAP_OVERLAY_LABEL, { url: "/?snap-overlay=1", x: position.x, y: position.y, width: size.width, height: size.height, decorations: false, transparent: true, alwaysOnTop: true, skipTaskbar: true, focus: false, resizable: false, shadow: false });
+    await new Promise<void>((resolve, reject) => { void overlay.once("tauri://created", () => resolve()); void overlay.once("tauri://error", ({ payload }) => reject(payload)); });
+    await overlay.setIgnoreCursorEvents(true);
+  } catch { /* Overlay failure must not prevent dragging. */ }
+}
+export async function hideSnapOverlay(): Promise<void> { try { await (await WebviewWindow.getByLabel(SNAP_OVERLAY_LABEL))?.destroy(); } catch { /* Non-fatal. */ } }
+export async function startDraggingMainWindow(showPlacementPreview = false): Promise<void> {
+  try {
+    if (showPlacementPreview) { await showSnapOverlay(); window.dispatchEvent(new Event("widget-native-drag-start")); }
+    await getCurrentWindow().startDragging();
+  } catch { /* Browser preview. */ }
+  finally { if (showPlacementPreview) window.dispatchEvent(new Event("widget-native-drag-end")); }
+}
 // Phase 7 can replace this implementation with hide-to-tray behavior.
 export async function closeMainWindow(): Promise<void> { await getCurrentWindow().close(); }
 export async function setWidgetDisplayMode(mode: DisplayMode, widgetMode = false): Promise<void> {
@@ -51,8 +73,7 @@ export async function applyWidgetPlacement(placement: WidgetPlacement): Promise<
     const x = placement.endsWith("Left") || placement === "leftCenter" ? left : placement.endsWith("Right") || placement === "rightCenter" ? right : centerX;
     const y = placement.startsWith("top") ? top : placement.startsWith("bottom") ? bottom : centerY;
     const appWindow = getCurrentWindow();
-    await appWindow.setSize(new LogicalSize(size.width, size.height));
-    await appWindow.setPosition(new LogicalPosition(x, y));
+    await Promise.all([appWindow.setSize(new LogicalSize(size.width, size.height)), appWindow.setPosition(new LogicalPosition(x, y))]);
   } catch { /* Browser preview. */ }
 }
 

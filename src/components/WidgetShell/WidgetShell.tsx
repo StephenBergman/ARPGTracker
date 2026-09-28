@@ -16,7 +16,7 @@ export function WidgetShell({ children, theme, displayMode, alwaysOnTop, widgetM
   const beginDrag = (event: PointerEvent<HTMLDivElement>) => {
     if (positionLocked || event.button !== 0 || !(event.target instanceof Element)) return;
     if (event.target.closest("button, a, input, select, textarea, [role='button'], [role='switch'], [data-window-drag='disabled']")) return;
-    void startDraggingMainWindow();
+    void startDraggingMainWindow(widgetMode && displayMode === "expanded");
   };
   return <div className={styles.frame} data-mode={displayMode} data-theme={theme.id} data-widget={widgetMode} data-locked={positionLocked} data-placement={widgetPlacement} onPointerDown={beginDrag} style={themeStyle}>
     {widgetMode ? <div aria-label="Widget controls" className={styles.widgetControls} data-window-drag="disabled">
