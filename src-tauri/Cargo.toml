@@ -1,7 +1,7 @@
 [package]
 name = "arpg-seasons"
-version = "0.1.0"
-description = "A lightweight desktop widget for ARPG season countdowns"
+version = "1.0.0"
+description = "A lightweight Windows desktop widget for ARPG season countdowns"
 authors = ["Stephen"]
 edition = "2021"
 

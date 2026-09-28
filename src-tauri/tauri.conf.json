@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "ARPG Seasons",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "identifier": "com.stephen.arpg-seasons",
   "build": {
     "beforeDevCommand": "npm run dev",
@@ -30,13 +30,28 @@
   },
   "bundle": {
     "active": true,
-    "targets": "all",
+    "targets": ["nsis"],
+    "publisher": "Stephen",
+    "copyright": "Copyright © 2026 Stephen",
+    "category": "Utility",
+    "shortDescription": "ARPG season information and countdowns at a glance.",
+    "longDescription": "A lightweight Windows desktop widget for tracking current and upcoming seasons across popular action RPGs.",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "windows": {
+      "allowDowngrades": false,
+      "nsis": {
+        "installerIcon": "icons/icon.ico",
+        "uninstallerIcon": "icons/icon.ico",
+        "installMode": "currentUser",
+        "languages": ["English"],
+        "displayLanguageSelector": false
+      }
+    }
   }
 }

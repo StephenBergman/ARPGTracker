@@ -1,6 +1,6 @@
 # ARPG Seasons
 
-A lightweight Windows-first desktop widget for ARPG season information and countdowns. Phase 9 adds native Windows login startup and single-instance protection.
+A lightweight Windows-first desktop widget for ARPG season information and countdowns. Version 1.0 completes the MVP with native Windows packaging and installer metadata.
 
 ## Stack
 
@@ -27,6 +27,14 @@ npm run build
 npm run tauri dev
 npm run tauri build
 ```
+
+## Production build
+
+The production release is version `1.0.0`. Run `npm run release:windows` on Windows to build the signed-ready executable and per-user NSIS installer. The release script copies the distributable installer to `ARPG-Seasons-1.0.0-x64-setup.exe` in the project root so it is easy to find. The installer adds ARPG Seasons to the Windows installed-apps list and provides standard uninstall support without requiring administrator access.
+
+Release builds use the production icon set in `src-tauri/icons` and embed the ARPG Seasons product name, version, description, publisher, and copyright metadata. Builds are unsigned until a Windows code-signing certificate is configured, so local test installations may show a SmartScreen warning.
+
+Before publishing a release, verify a clean install, first launch, tray behavior, launch-at-startup opt-in, upgrade over the previous version, and uninstall on a Windows test machine.
 
 ## Phase 1 structure
 
