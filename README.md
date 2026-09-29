@@ -1,6 +1,6 @@
 # ARPG Seasons
 
-A lightweight Windows-first desktop widget for ARPG season information and countdowns. Version 1.1 adds signed, user-approved application updates through GitHub Releases.
+A lightweight Windows-first desktop widget for ARPG season information and countdowns. Version 1.2 adds a resizable standard application mode with PoE 1 economy snapshots and external build resources; version 1.1 introduced signed, user-approved application updates through GitHub Releases.
 
 ## Stack
 
@@ -30,7 +30,7 @@ npm run tauri build
 
 ## Production build
 
-The updater-enabled production release is version `1.1.0`. Run `npm run release:windows` on Windows to build the per-user NSIS installer and its Tauri updater signature. Set `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` in the current shell first; the script uses the private key at `%USERPROFILE%\.tauri\arpg-seasons-updater.key` unless `TAURI_SIGNING_PRIVATE_KEY` specifies another key. The release script copies the distributable installer and `.sig` file to the project root. The installer adds ARPG Seasons to the Windows installed-apps list and provides standard uninstall support without requiring administrator access.
+The current development release is version `1.2.0`; updater support was introduced in `1.1.0`. Run `npm run release:windows` on Windows to build the per-user NSIS installer and its Tauri updater signature. Set `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` in the current shell first; the script uses the private key at `%USERPROFILE%\.tauri\arpg-seasons-updater.key` unless `TAURI_SIGNING_PRIVATE_KEY` specifies another key. The release script copies the distributable installer and `.sig` file to the project root. The installer adds ARPG Seasons to the Windows installed-apps list and provides standard uninstall support without requiring administrator access.
 
 Release builds use the production icon set in `src-tauri/icons` and embed the ARPG Seasons product name, version, description, publisher, and copyright metadata. Builds are unsigned until a Windows code-signing certificate is configured, so local test installations may show a SmartScreen warning.
 
@@ -42,7 +42,7 @@ Application updates are delivered from GitHub Releases and are separate from sea
 
 The private updater key must never be committed. Add its full contents to the `TAURI_SIGNING_PRIVATE_KEY` GitHub Actions secret and its password to `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`. Keep an independent secure backup of both: installed clients will reject releases signed by a different key.
 
-To publish, update the version consistently in `package.json`, `src-tauri/Cargo.toml`, and `src-tauri/tauri.conf.json`, commit the changes, then push a matching tag such as `v1.1.0`. The Windows release workflow runs the tests, builds the NSIS installer and signature, creates the GitHub Release, and uploads `latest.json` for updater discovery. Version `1.0.0` does not contain the updater, so existing users must install `1.1.0` manually once; later versions can update in-app.
+To publish, update the version consistently in `package.json`, `src-tauri/Cargo.toml`, and `src-tauri/tauri.conf.json`, commit the changes, then push a matching tag such as `v1.2.0`. The Windows release workflow runs the tests, builds the NSIS installer and signature, creates the GitHub Release, and uploads `latest.json` for updater discovery. Version `1.0.0` does not contain the updater, so existing users must install `1.1.0` manually once; later versions can update in-app.
 
 ## Phase 1 structure
 
@@ -69,6 +69,8 @@ Season datasets use schema version `1`. Each configured game requires current-se
 The expanded widget is data-driven across all configured games and handles confirmed, estimated, and unknown dates. Its centralized countdown updates once per second when seconds are visible (or once per minute otherwise), aligns updates to clock boundaries, clamps at zero, and requests fresh season data once at transition. Each game resolves through a typed theme map, keeping visual identity separate from season behavior.
 
 Compact mode persists locally, changes the native window to a 430×136 widget, and presents the selected season and a minute-level countdown in two lines.
+
+With widget mode disabled, the standard window remembers its size and exposes build and market resources. For PoE 1 it uses GGG's public hourly Currency Exchange feed to capture a local Chaos/Divine history, calculate a 24-hour comparison, and display a compact currency watchlist. Raw hourly responses are validated and discarded; only normalized snapshots are retained locally. Personal stash valuation is not available until an approved OAuth client can request `account:stashes` access.
 
 The system tray can restore the widget, switch games, open settings, toggle compact mode or always-on-top, request fresh season data, and explicitly exit. Closing the window hides it to the tray. Selected game, display mode, always-on-top, and window position persist locally; positions from disconnected monitors are rejected and recentered on an available display.
 

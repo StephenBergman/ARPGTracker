@@ -1,0 +1,28 @@
+.snapshot { margin-bottom: 18px; padding: 16px; border: 1px solid var(--color-border); border-radius: 5px; background: rgba(0, 0, 0, .18); }
+.heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.heading span { color: var(--color-accent); font-size: .53rem; font-weight: 700; letter-spacing: .16em; }
+.heading h3 { margin: 5px 0 0; color: var(--color-text-bright); font: 500 .83rem/1.2 var(--font-display); letter-spacing: .06em; text-transform: uppercase; }
+.heading button { padding: 6px 9px; border: 1px solid var(--color-border); border-radius: 3px; background: transparent; color: var(--color-text-muted); font-size: .58rem; cursor: pointer; }
+.heading button:hover:not(:disabled) { border-color: var(--color-accent-dim); color: var(--color-accent); }
+.heading button:disabled { cursor: wait; opacity: .6; }
+.value { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-top: 18px; }
+.value strong { color: var(--color-text-bright); font: 500 1.65rem/1 var(--font-display); }
+.value small { color: var(--color-accent); font: 600 .64rem/1 var(--font-ui); text-transform: uppercase; }
+.value > span { color: var(--color-text-muted); font-size: .61rem; }
+.metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+.metrics div { display: grid; gap: 5px; padding-top: 10px; border-top: 1px solid var(--color-border); }
+.metrics span { color: var(--color-text-muted); font-size: .53rem; letter-spacing: .08em; text-transform: uppercase; }
+.metrics strong { color: var(--color-text); font-size: .72rem; }
+.metrics strong[data-direction="up"] { color: #c7a76b; }
+.metrics strong[data-direction="down"] { color: #86b5a4; }
+.watchlist { display: grid; gap: 7px; margin-top: 14px; }
+.watchlist div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-bottom: 6px; border-bottom: 1px solid color-mix(in srgb, var(--color-border) 65%, transparent); }
+.watchlist span { overflow: hidden; color: var(--color-text-muted); font-size: .6rem; text-overflow: ellipsis; white-space: nowrap; }
+.watchlist strong { color: var(--color-text); font-size: .66rem; }
+.watchlist small { color: var(--color-text-muted); font-size: .52rem; font-weight: 500; text-transform: uppercase; }
+.snapshot > p { margin: 13px 0 0; color: var(--color-text-muted); font-size: .55rem; line-height: 1.45; }
+.state { margin-right: 4px; color: #86b5a4; font-weight: 700; letter-spacing: .08em; }
+.snapshot[data-freshness="cached"] .state { color: #c7a76b; }
+.snapshot[data-freshness="stale"] .state { color: #c8897c; }
+.empty { min-height: 36px; }
+.snapshot .error { color: #c8897c; }

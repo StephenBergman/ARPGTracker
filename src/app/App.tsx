@@ -2,6 +2,7 @@ import { useCallback, useState } from "react";
 import { Countdown } from "../components/Countdown/Countdown";
 import { CompactWidget } from "../components/CompactWidget/CompactWidget";
 import { CurrentSeason } from "../components/CurrentSeason/CurrentSeason";
+import { InsightsPanel } from "../components/InsightsPanel/InsightsPanel";
 import { GameSelector, type WidgetContentLayout } from "../components/GameSelector/GameSelector";
 import { SeasonProgress } from "../components/SeasonProgress/SeasonProgress";
 import { SettingsPanel } from "../components/SettingsPanel/SettingsPanel";
@@ -35,13 +36,16 @@ export function App() {
   return (
     <WidgetShell theme={GAME_THEMES[selectedGameId]} displayMode={displayMode} alwaysOnTop={alwaysOnTop} widgetMode={widgetMode} positionLocked={positionLocked} widgetPlacement={widgetPlacement} onToggleDisplayMode={toggleDisplayMode} onToggleAlwaysOnTop={() => setAlwaysOnTop((value) => !value)} onTogglePositionLock={() => setPositionLocked((value) => !value)} onOpenSettings={openSettings}>
       {displayMode === "compact" ? <CompactWidget season={selectedSeason} shortName={gameDefinition.shortName} checkingForUpdate={isRefreshing} onElapsed={() => { void refresh(); }} /> : <><GameSelector games={GAME_DEFINITIONS} selectedGameId={selectedGameId} onSelect={setSelectedGameId} layout={widgetLayout} />
+      <div className={styles.workspace} data-standard={!widgetMode}>
       <main className={styles.content} data-layout={widgetLayout}>
         <CurrentSeason season={selectedSeason} now={now} />
         <div className={styles.divider} aria-hidden="true"><span /></div>
         <Countdown nextSeason={selectedSeason.nextSeason} showSeconds={preferences.showSeconds} checkingForUpdate={isRefreshing} onElapsed={() => { void refresh(); }} />
         {preferences.showSeasonProgress && <SeasonProgress season={selectedSeason} now={now} />}
         <p className={styles.source}>Data source: {origin}{isRefreshing ? " / checking for updates" : ""}</p>
-      </main></>}
+      </main>
+      {!widgetMode && <InsightsPanel gameId={selectedGameId} seasonTitle={selectedSeason.currentSeason.title} />}
+      </div></>}
       {settingsOpen && <SettingsPanel displayMode={displayMode} alwaysOnTop={alwaysOnTop} widgetMode={widgetMode} positionLocked={positionLocked} widgetPlacement={widgetPlacement} launchAtStartup={preferences.launchAtStartup} startupSyncStatus={preferences.startupSyncStatus} showSeconds={preferences.showSeconds} showSeasonProgress={preferences.showSeasonProgress} lastUpdated={dataset.updatedAt} isRefreshing={isRefreshing} appUpdater={appUpdater} onDisplayMode={setModeFromSettings} onAlwaysOnTop={setAlwaysOnTop} onWidgetMode={setWidgetMode} onPositionLocked={setPositionLocked} onWidgetPlacement={setPlacementFromSettings} onLaunchAtStartup={preferences.setLaunchAtStartup} onShowSeconds={preferences.setShowSeconds} onShowSeasonProgress={preferences.setShowSeasonProgress} onRefresh={() => { void refresh(); }} onClose={() => setSettingsOpen(false)} />}
     </WidgetShell>
   );

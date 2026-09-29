@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { loadAlwaysOnTop, loadDisplayMode, loadLaunchAtStartup, loadPositionLocked, loadSelectedGame, loadShowSeasonProgress, loadShowSeconds, loadWidgetMode, loadWidgetPlacement, loadWindowPosition, saveAlwaysOnTop, saveDisplayMode, saveLaunchAtStartup, savePositionLocked, saveSelectedGame, saveShowSeasonProgress, saveShowSeconds, saveWidgetMode, saveWidgetPlacement, saveWindowPosition } from "./settings.store";
+import { loadAlwaysOnTop, loadDisplayMode, loadLaunchAtStartup, loadPositionLocked, loadSelectedGame, loadShowSeasonProgress, loadShowSeconds, loadStandardWindowSize, loadWidgetMode, loadWidgetPlacement, loadWindowPosition, saveAlwaysOnTop, saveDisplayMode, saveLaunchAtStartup, savePositionLocked, saveSelectedGame, saveShowSeasonProgress, saveShowSeconds, saveStandardWindowSize, saveWidgetMode, saveWidgetPlacement, saveWindowPosition } from "./settings.store";
 
 class MemoryStorage {
   value: string | null = null;
@@ -37,6 +37,13 @@ describe("display mode storage", () => {
     expect(loadSelectedGame(storage)).toBe("poe2");
     storage.value = '{"x":"bad","y":2}';
     expect(loadWindowPosition(storage)).toBeNull();
+  });
+
+  it("persists a standard window size and enforces usable minimums", () => {
+    const storage = new MemoryStorage();
+    expect(loadStandardWindowSize(storage)).toEqual({ width: 960, height: 720 });
+    saveStandardWindowSize({ width: 500, height: 400 }, storage);
+    expect(loadStandardWindowSize(storage)).toEqual({ width: 760, height: 600 });
   });
 
   it("uses sane display defaults and persists overrides", () => {

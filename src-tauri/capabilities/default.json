@@ -9,12 +9,21 @@
     "core:window:allow-close",
     "core:window:allow-destroy",
     "core:window:allow-set-size",
+    "core:window:allow-set-min-size",
     "core:window:allow-set-position",
     "core:window:allow-center",
     "core:window:allow-set-always-on-top",
     "core:window:allow-set-skip-taskbar",
     "core:window:allow-set-ignore-cursor-events",
     "core:webview:allow-create-webview-window",
+    {
+      "identifier": "http:default",
+      "allow": [{ "url": "https://web.poecdn.com/api/currency-exchange/**" }]
+    },
+    {
+      "identifier": "opener:allow-open-url",
+      "allow": [{ "url": "https://maxroll.gg/**" }, { "url": "https://poe.ninja/**" }]
+    },
     "core:window:allow-start-dragging",
     "autostart:allow-enable",
     "autostart:allow-disable",

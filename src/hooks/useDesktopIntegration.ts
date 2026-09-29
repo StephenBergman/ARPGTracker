@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { emit, listen } from "@tauri-apps/api/event";
 import { availableMonitors, getCurrentWindow } from "@tauri-apps/api/window";
-import { loadAlwaysOnTop, loadPositionLocked, loadWidgetMode, loadWidgetPlacement, loadWindowPosition, saveAlwaysOnTop, savePositionLocked, saveSelectedGame, saveWidgetMode, saveWidgetPlacement, saveWindowPosition } from "../features/settings/settings.store";
+import { loadAlwaysOnTop, loadPositionLocked, loadWidgetMode, loadWidgetPlacement, loadWindowPosition, saveAlwaysOnTop, savePositionLocked, saveSelectedGame, saveStandardWindowSize, saveWidgetMode, saveWidgetPlacement, saveWindowPosition } from "../features/settings/settings.store";
 import type { DisplayMode } from "../features/settings/settings.types";
 import { GAME_IDS, type GameId } from "../features/seasons/season.types";
 import { applyWidgetPlacement, detectWidgetPlacement, hideSnapOverlay, restoreWidgetPosition, setWidgetAlwaysOnTop, setWidgetDisplayMode, setWidgetMode } from "../platform/window";
@@ -63,6 +63,13 @@ export function useDesktopIntegration(options: DesktopIntegrationOptions) {
           saveWindowPosition({ x: payload.x, y: payload.y });
           if (!dragging || !widgetMode || options.displayMode !== "expanded" || positionLocked) return;
           void previewPlacement(payload);
+        }));
+        unlisteners.push(await getCurrentWindow().onResized(({ payload }) => {
+          if (widgetMode || options.displayMode === "compact") return;
+          void getCurrentWindow().scaleFactor().then((scaleFactor) => {
+            const logical = payload.toLogical(scaleFactor);
+            saveStandardWindowSize({ width: logical.width, height: logical.height });
+          });
         }));
         unlisteners.push(await listen<string>("tray-select-game", ({ payload }) => { const id = GAME_IDS.find((gameId) => gameId === payload); if (id) options.setSelectedGameId(id); }));
         unlisteners.push(await listen("tray-toggle-compact", () => options.setDisplayMode(options.displayMode === "compact" ? "expanded" : "compact")));

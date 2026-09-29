@@ -3,6 +3,7 @@ import { availableMonitors, currentMonitor, getCurrentWindow, PhysicalPosition, 
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { invoke } from "@tauri-apps/api/core";
 import type { DisplayMode, WidgetPlacement } from "../features/settings/settings.types";
+import { loadStandardWindowSize } from "../features/settings/settings.store";
 export async function minimizeMainWindow(): Promise<void> { await getCurrentWindow().minimize(); }
 const SNAP_OVERLAY_LABEL = "snap-overlay";
 async function showSnapOverlay(): Promise<void> {
@@ -28,7 +29,15 @@ export async function startDraggingMainWindow(showPlacementPreview = false): Pro
 // Phase 7 can replace this implementation with hide-to-tray behavior.
 export async function closeMainWindow(): Promise<void> { await getCurrentWindow().close(); }
 export async function setWidgetDisplayMode(mode: DisplayMode, widgetMode = false): Promise<void> {
-  try { await getCurrentWindow().setSize(new LogicalSize(430, mode === "compact" ? 136 : widgetMode ? 560 : 620)); }
+  try {
+    const appWindow = getCurrentWindow();
+    await appWindow.setResizable(!widgetMode);
+    await appWindow.setMinSize(new LogicalSize(widgetMode ? 380 : 760, widgetMode ? 120 : 600));
+    const standardSize = loadStandardWindowSize();
+    await appWindow.setSize(widgetMode
+      ? new LogicalSize(430, mode === "compact" ? 136 : 560)
+      : new LogicalSize(standardSize.width, mode === "compact" ? 180 : standardSize.height));
+  }
   catch { /* Browser preview has no native window; Tauri errors are non-fatal. */ }
 }
 export async function setWidgetAlwaysOnTop(value: boolean): Promise<void> { try { await getCurrentWindow().setAlwaysOnTop(value); } catch { /* Browser preview. */ } }

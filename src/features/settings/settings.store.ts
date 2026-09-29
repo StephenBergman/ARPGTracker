@@ -1,4 +1,4 @@
-import type { DisplayMode, WidgetPlacement } from "./settings.types";
+import type { DisplayMode, WidgetPlacement, WindowSize } from "./settings.types";
 import type { GameId } from "../seasons/season.types";
 import { GAME_IDS } from "../seasons/season.types";
 import type { WindowPosition } from "./settings.types";
@@ -8,6 +8,7 @@ interface StorageReader { getItem(key: string): string | null; setItem(key: stri
 const SELECTED_GAME_KEY = "arpg-seasons.selected-game.v1";
 const ALWAYS_ON_TOP_KEY = "arpg-seasons.always-on-top.v1";
 const WINDOW_POSITION_KEY = "arpg-seasons.window-position.v1";
+const STANDARD_WINDOW_SIZE_KEY = "arpg-seasons.standard-window-size.v1";
 const LAUNCH_AT_STARTUP_KEY = "arpg-seasons.launch-at-startup.v1";
 const WIDGET_MODE_KEY = "arpg-seasons.widget-mode.v1";
 const POSITION_LOCKED_KEY = "arpg-seasons.position-locked.v1";
@@ -42,6 +43,18 @@ export function loadWindowPosition(storage: StorageReader = localStorage): Windo
   } catch { return null; }
 }
 export function saveWindowPosition(position: WindowPosition, storage: StorageReader = localStorage): void { try { storage.setItem(WINDOW_POSITION_KEY, JSON.stringify(position)); } catch { /* Non-fatal. */ } }
+export function loadStandardWindowSize(storage: StorageReader = localStorage): WindowSize {
+  try {
+    const value = JSON.parse(storage.getItem(STANDARD_WINDOW_SIZE_KEY) ?? "null") as Partial<WindowSize> | null;
+    return value && Number.isFinite(value.width) && Number.isFinite(value.height)
+      ? { width: Math.max(760, value.width as number), height: Math.max(600, value.height as number) }
+      : { width: 960, height: 720 };
+  } catch { return { width: 960, height: 720 }; }
+}
+export function saveStandardWindowSize(size: WindowSize, storage: StorageReader = localStorage): void {
+  try { storage.setItem(STANDARD_WINDOW_SIZE_KEY, JSON.stringify({ width: Math.max(760, Math.round(size.width)), height: Math.max(600, Math.round(size.height)) })); }
+  catch { /* Non-fatal. */ }
+}
 
 function loadBoolean(key: string, fallback: boolean, storage: StorageReader): boolean {
   try { const value = storage.getItem(key); return value === null ? fallback : value === "true"; }
