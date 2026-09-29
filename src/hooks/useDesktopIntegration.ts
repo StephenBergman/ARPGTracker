@@ -4,7 +4,7 @@ import { availableMonitors, getCurrentWindow } from "@tauri-apps/api/window";
 import { loadAlwaysOnTop, loadPositionLocked, loadStandardWindowPosition, loadStandardWindowSize, loadWidgetMode, loadWidgetPlacement, loadWidgetWindowGeometry, saveAlwaysOnTop, savePositionLocked, saveSelectedGame, saveStandardWindowPosition, saveStandardWindowSize, saveWidgetMode, saveWidgetPlacement, saveWidgetWindowGeometry } from "../features/settings/settings.store";
 import type { DisplayMode } from "../features/settings/settings.types";
 import { GAME_IDS, type GameId } from "../features/seasons/season.types";
-import { applyWidgetPlacement, detectWidgetPlacement, getWindowGeometry, hideSnapOverlay, restoreWindowGeometry, setWidgetAlwaysOnTop, setWidgetDisplayMode, setWidgetMode } from "../platform/window";
+import { applyWidgetPlacement, detectWidgetPlacement, getWindowGeometry, hideSnapOverlay, restoreWindowGeometry, setWidgetDisplayMode, setWidgetMode, setWindowLayer } from "../platform/window";
 
 interface DesktopIntegrationOptions { selectedGameId: GameId; setSelectedGameId: (id: GameId) => void; displayMode: DisplayMode; setDisplayMode: (mode: DisplayMode) => void; settingsOpen: boolean; refresh: () => Promise<void>; openSettings: () => void; }
 
@@ -21,7 +21,7 @@ export function useDesktopIntegration(options: DesktopIntegrationOptions) {
   const hasAppliedInitialLayoutRef = useRef(false);
 
   useEffect(() => { saveSelectedGame(options.selectedGameId); }, [options.selectedGameId]);
-  useEffect(() => { saveAlwaysOnTop(alwaysOnTop); void setWidgetAlwaysOnTop(alwaysOnTop); }, [alwaysOnTop]);
+  useEffect(() => { saveAlwaysOnTop(alwaysOnTop); void setWindowLayer(alwaysOnTop, widgetMode && !alwaysOnTop); }, [alwaysOnTop, widgetMode]);
   useEffect(() => {
     saveWidgetMode(widgetMode);
     const modeChanged = previousWidgetModeRef.current !== widgetMode;

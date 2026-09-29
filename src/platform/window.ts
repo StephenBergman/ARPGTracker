@@ -43,7 +43,16 @@ export async function setWidgetDisplayMode(mode: DisplayMode, widgetMode = false
   }
   catch { /* Browser preview has no native window; Tauri errors are non-fatal. */ }
 }
-export async function setWidgetAlwaysOnTop(value: boolean): Promise<void> { try { await getCurrentWindow().setAlwaysOnTop(value); } catch { /* Browser preview. */ } }
+export async function setWindowLayer(alwaysOnTop: boolean, alwaysOnBottom: boolean): Promise<void> {
+  try {
+    const appWindow = getCurrentWindow();
+    // These states are mutually exclusive on Windows; clear both before applying the requested layer.
+    await appWindow.setAlwaysOnTop(false);
+    await appWindow.setAlwaysOnBottom(false);
+    if (alwaysOnTop) await appWindow.setAlwaysOnTop(true);
+    else if (alwaysOnBottom) await appWindow.setAlwaysOnBottom(true);
+  } catch { /* Browser preview. */ }
+}
 export async function setWidgetMode(value: boolean): Promise<void> { try { await getCurrentWindow().setSkipTaskbar(value); } catch { /* Browser preview. */ } }
 
 const PLACEMENT_GAP = 12;
