@@ -2,9 +2,12 @@ import { LogicalPosition, LogicalSize } from "@tauri-apps/api/dpi";
 import { availableMonitors, currentMonitor, getCurrentWindow, PhysicalPosition, type Monitor } from "@tauri-apps/api/window";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { invoke } from "@tauri-apps/api/core";
-import type { DisplayMode, WidgetPlacement } from "../features/settings/settings.types";
+import type { DisplayMode, WidgetPlacement, WindowGeometry } from "../features/settings/settings.types";
 import { loadStandardWindowSize } from "../features/settings/settings.store";
+export type ResizeDirection = "East" | "North" | "NorthEast" | "NorthWest" | "South" | "SouthEast" | "SouthWest" | "West";
 export async function minimizeMainWindow(): Promise<void> { await getCurrentWindow().minimize(); }
+export async function toggleMaximizeMainWindow(): Promise<void> { await getCurrentWindow().toggleMaximize(); }
+export async function startResizeMainWindow(direction: ResizeDirection): Promise<void> { await getCurrentWindow().startResizeDragging(direction); }
 const SNAP_OVERLAY_LABEL = "snap-overlay";
 async function showSnapOverlay(): Promise<void> {
   try {
@@ -111,4 +114,26 @@ export async function restoreWidgetPosition(position: { x: number; y: number } |
     if (isPositionOnAvailableDisplay(position, await availableMonitors())) await appWindow.setPosition(new PhysicalPosition(position.x, position.y));
     else await appWindow.center();
   } catch { /* Browser preview. */ }
+}
+
+export async function restoreWindowGeometry(geometry: WindowGeometry | null, centerWhenUnavailable = false): Promise<boolean> {
+  try {
+    const appWindow = getCurrentWindow();
+    if (!geometry || !isPositionOnAvailableDisplay(geometry.position, await availableMonitors())) {
+      if (centerWhenUnavailable) await appWindow.center();
+      return false;
+    }
+    await appWindow.setSize(new LogicalSize(geometry.size.width, geometry.size.height));
+    await appWindow.setPosition(new PhysicalPosition(geometry.position.x, geometry.position.y));
+    return true;
+  } catch { return false; }
+}
+
+export async function getWindowGeometry(): Promise<WindowGeometry | null> {
+  try {
+    const appWindow = getCurrentWindow();
+    const [position, physicalSize, scaleFactor] = await Promise.all([appWindow.outerPosition(), appWindow.outerSize(), appWindow.scaleFactor()]);
+    const size = physicalSize.toLogical(scaleFactor);
+    return { position: { x: position.x, y: position.y }, size: { width: size.width, height: size.height } };
+  } catch { return null; }
 }

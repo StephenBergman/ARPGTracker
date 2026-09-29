@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { loadAlwaysOnTop, loadDisplayMode, loadLaunchAtStartup, loadPositionLocked, loadSelectedGame, loadShowSeasonProgress, loadShowSeconds, loadStandardWindowSize, loadWidgetMode, loadWidgetPlacement, loadWindowPosition, saveAlwaysOnTop, saveDisplayMode, saveLaunchAtStartup, savePositionLocked, saveSelectedGame, saveShowSeasonProgress, saveShowSeconds, saveStandardWindowSize, saveWidgetMode, saveWidgetPlacement, saveWindowPosition } from "./settings.store";
+import { loadAlwaysOnTop, loadDisplayMode, loadLaunchAtStartup, loadPositionLocked, loadSelectedGame, loadShowSeasonProgress, loadShowSeconds, loadStandardWindowPosition, loadStandardWindowSize, loadWidgetMode, loadWidgetPlacement, loadWidgetWindowGeometry, loadWindowPosition, saveAlwaysOnTop, saveDisplayMode, saveLaunchAtStartup, savePositionLocked, saveSelectedGame, saveShowSeasonProgress, saveShowSeconds, saveStandardWindowPosition, saveStandardWindowSize, saveWidgetMode, saveWidgetPlacement, saveWidgetWindowGeometry, saveWindowPosition } from "./settings.store";
 
 class MemoryStorage {
   value: string | null = null;
@@ -44,6 +44,15 @@ describe("display mode storage", () => {
     expect(loadStandardWindowSize(storage)).toEqual({ width: 960, height: 720 });
     saveStandardWindowSize({ width: 500, height: 400 }, storage);
     expect(loadStandardWindowSize(storage)).toEqual({ width: 760, height: 600 });
+  });
+
+  it("keeps standard and widget geometry independent", () => {
+    const standardStorage = new MemoryStorage();
+    saveStandardWindowPosition({ x: 120, y: 80 }, standardStorage);
+    expect(loadStandardWindowPosition(standardStorage)).toEqual({ x: 120, y: 80 });
+    const widgetStorage = new MemoryStorage();
+    saveWidgetWindowGeometry({ position: { x: 1450, y: 40 }, size: { width: 720, height: 250 } }, widgetStorage);
+    expect(loadWidgetWindowGeometry(widgetStorage)).toEqual({ position: { x: 1450, y: 40 }, size: { width: 720, height: 250 } });
   });
 
   it("uses sane display defaults and persists overrides", () => {

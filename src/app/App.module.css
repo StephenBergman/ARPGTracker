@@ -35,6 +35,24 @@
   .content > section[aria-label^="Season progress"] { grid-area: 2 / 1 / 2 / 4; width: 100%; margin: 0; padding-top: 5px; }
   .content .source { display: none; }
 }
+:global([data-widget="false"][data-mode="expanded"]) .workspace[data-standard="true"] .content {
+  display: flex;
+  min-width: 0;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: clamp(18px, 2.2cqh, 30px);
+  padding: clamp(28px, 4cqw, 68px);
+  background: radial-gradient(circle at 18% 5%, color-mix(in srgb, var(--color-glow) 72%, transparent), transparent 34%);
+}
+:global([data-widget="false"][data-mode="expanded"]) .workspace[data-standard="true"] .divider {
+  height: 1px;
+  margin: 0;
+}
+:global([data-widget="false"][data-mode="expanded"]) .workspace[data-standard="true"] .source {
+  margin-top: auto;
+  padding-top: 4px;
+  text-align: left;
+}
 @container (max-width: 760px) {
   .workspace[data-standard="true"] { display: flex; overflow: auto; flex-direction: column; }
 }

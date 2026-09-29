@@ -1,14 +1,16 @@
-import type { DisplayMode, WidgetPlacement, WindowSize } from "./settings.types";
+import type { DisplayMode, WidgetPlacement, WindowGeometry, WindowPosition, WindowSize } from "./settings.types";
 import type { GameId } from "../seasons/season.types";
 import { GAME_IDS } from "../seasons/season.types";
-import type { WindowPosition } from "./settings.types";
 
 const DISPLAY_MODE_KEY = "arpg-seasons.display-mode.v1";
 interface StorageReader { getItem(key: string): string | null; setItem(key: string, value: string): void; }
 const SELECTED_GAME_KEY = "arpg-seasons.selected-game.v1";
 const ALWAYS_ON_TOP_KEY = "arpg-seasons.always-on-top.v1";
 const WINDOW_POSITION_KEY = "arpg-seasons.window-position.v1";
-const STANDARD_WINDOW_SIZE_KEY = "arpg-seasons.standard-window-size.v1";
+const STANDARD_WINDOW_POSITION_KEY = "arpg-seasons.standard-window-position.v1";
+const WIDGET_WINDOW_GEOMETRY_KEY = "arpg-seasons.widget-window-geometry.v1";
+// v2 discards sizes that could be polluted by widget-placement resize events.
+const STANDARD_WINDOW_SIZE_KEY = "arpg-seasons.standard-window-size.v2";
 const LAUNCH_AT_STARTUP_KEY = "arpg-seasons.launch-at-startup.v1";
 const WIDGET_MODE_KEY = "arpg-seasons.widget-mode.v1";
 const POSITION_LOCKED_KEY = "arpg-seasons.position-locked.v1";
@@ -43,6 +45,24 @@ export function loadWindowPosition(storage: StorageReader = localStorage): Windo
   } catch { return null; }
 }
 export function saveWindowPosition(position: WindowPosition, storage: StorageReader = localStorage): void { try { storage.setItem(WINDOW_POSITION_KEY, JSON.stringify(position)); } catch { /* Non-fatal. */ } }
+function loadPosition(key: string, storage: StorageReader): WindowPosition | null {
+  try {
+    const value = JSON.parse(storage.getItem(key) ?? "null") as Partial<WindowPosition> | null;
+    return value && Number.isFinite(value.x) && Number.isFinite(value.y) ? { x: value.x as number, y: value.y as number } : null;
+  } catch { return null; }
+}
+export const loadStandardWindowPosition = (storage: StorageReader = localStorage) => loadPosition(STANDARD_WINDOW_POSITION_KEY, storage);
+export function saveStandardWindowPosition(position: WindowPosition, storage: StorageReader = localStorage): void { try { storage.setItem(STANDARD_WINDOW_POSITION_KEY, JSON.stringify(position)); } catch { /* Non-fatal. */ } }
+export function loadWidgetWindowGeometry(storage: StorageReader = localStorage): WindowGeometry | null {
+  try {
+    const value = JSON.parse(storage.getItem(WIDGET_WINDOW_GEOMETRY_KEY) ?? "null") as Partial<WindowGeometry> | null;
+    if (!value?.position || !value.size || !Number.isFinite(value.position.x) || !Number.isFinite(value.position.y) || !Number.isFinite(value.size.width) || !Number.isFinite(value.size.height)) return null;
+    return { position: { x: value.position.x, y: value.position.y }, size: { width: Math.max(380, value.size.width), height: Math.max(120, value.size.height) } };
+  } catch { return null; }
+}
+export function saveWidgetWindowGeometry(geometry: WindowGeometry, storage: StorageReader = localStorage): void {
+  try { storage.setItem(WIDGET_WINDOW_GEOMETRY_KEY, JSON.stringify(geometry)); } catch { /* Non-fatal. */ }
+}
 export function loadStandardWindowSize(storage: StorageReader = localStorage): WindowSize {
   try {
     const value = JSON.parse(storage.getItem(STANDARD_WINDOW_SIZE_KEY) ?? "null") as Partial<WindowSize> | null;

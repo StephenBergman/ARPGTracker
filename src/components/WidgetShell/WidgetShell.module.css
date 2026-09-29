@@ -13,3 +13,15 @@
 .widgetControls button:hover, .widgetControls button[data-active="true"] { background: rgba(255,255,255,.06); color: var(--color-accent); }
 .widgetControls button:focus-visible { outline: 2px solid var(--color-accent); outline-offset: -2px; }
 .frame[data-widget="true"][data-mode="expanded"] { border-radius: 8px; }
+.resizeHandle { position: absolute; z-index: 10; }
+.resizeHandle[data-direction="North"], .resizeHandle[data-direction="South"] { right: 8px; left: 8px; height: 6px; cursor: ns-resize; }
+.resizeHandle[data-direction="North"] { top: 0; }
+.resizeHandle[data-direction="South"] { bottom: 0; }
+.resizeHandle[data-direction="East"], .resizeHandle[data-direction="West"] { top: 8px; bottom: 8px; width: 6px; cursor: ew-resize; }
+.resizeHandle[data-direction="East"] { right: 0; }
+.resizeHandle[data-direction="West"] { left: 0; }
+.resizeHandle[data-direction="NorthEast"], .resizeHandle[data-direction="NorthWest"], .resizeHandle[data-direction="SouthEast"], .resizeHandle[data-direction="SouthWest"] { width: 10px; height: 10px; }
+.resizeHandle[data-direction="NorthEast"] { top: 0; right: 0; cursor: nesw-resize; }
+.resizeHandle[data-direction="NorthWest"] { top: 0; left: 0; cursor: nwse-resize; }
+.resizeHandle[data-direction="SouthEast"] { right: 0; bottom: 0; cursor: nwse-resize; }
+.resizeHandle[data-direction="SouthWest"] { bottom: 0; left: 0; cursor: nesw-resize; }

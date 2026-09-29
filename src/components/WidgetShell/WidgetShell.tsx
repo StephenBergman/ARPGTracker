@@ -1,6 +1,6 @@
 import type { CSSProperties, PointerEvent, PropsWithChildren } from "react";
 import type { DisplayMode, WidgetPlacement } from "../../features/settings/settings.types";
-import { closeMainWindow, startDraggingMainWindow } from "../../platform/window";
+import { closeMainWindow, startDraggingMainWindow, startResizeMainWindow, type ResizeDirection } from "../../platform/window";
 import type { GameTheme } from "../../themes";
 import { WindowControls } from "../WindowControls/WindowControls";
 import styles from "./WidgetShell.module.css";
@@ -14,11 +14,13 @@ interface WidgetShellProps {
 export function WidgetShell({ children, theme, displayMode, alwaysOnTop, widgetMode, positionLocked, widgetPlacement, onToggleDisplayMode, onToggleAlwaysOnTop, onTogglePositionLock, onOpenSettings }: PropsWithChildren<WidgetShellProps>) {
   const themeStyle: ThemeStyle = { "--color-background": theme.background, "--color-surface": theme.surface, "--color-border": theme.border, "--color-border-strong": theme.borderStrong, "--color-accent": theme.primary, "--color-accent-dim": theme.primaryDim, "--color-secondary": theme.secondary, "--color-text": theme.text, "--color-text-bright": theme.brightText, "--color-text-muted": theme.mutedText, "--color-glow": theme.glow };
   const beginDrag = (event: PointerEvent<HTMLDivElement>) => {
-    if (positionLocked || event.button !== 0 || !(event.target instanceof Element)) return;
+    if (!widgetMode || positionLocked || event.button !== 0 || !(event.target instanceof Element)) return;
     if (event.target.closest("button, a, input, select, textarea, [role='button'], [role='switch'], [data-window-drag='disabled']")) return;
     void startDraggingMainWindow(widgetMode && displayMode === "expanded");
   };
+  const resizeDirections: readonly ResizeDirection[] = ["North", "NorthEast", "East", "SouthEast", "South", "SouthWest", "West", "NorthWest"];
   return <div className={styles.frame} data-mode={displayMode} data-theme={theme.id} data-widget={widgetMode} data-locked={positionLocked} data-placement={widgetPlacement} onPointerDown={beginDrag} style={themeStyle}>
+    {!widgetMode && resizeDirections.map((direction) => <div aria-hidden="true" className={styles.resizeHandle} data-direction={direction} data-window-drag="disabled" key={direction} onPointerDown={(event) => { event.preventDefault(); event.stopPropagation(); void startResizeMainWindow(direction); }} />)}
     {widgetMode ? <div aria-label="Widget controls" className={styles.widgetControls} data-window-drag="disabled">
       <button aria-label="Open settings" onClick={onOpenSettings} title="Settings" type="button">&#9881;</button>
       <button aria-label={positionLocked ? "Unlock widget position" : "Lock widget position"} aria-pressed={positionLocked} data-active={positionLocked} onClick={onTogglePositionLock} title={positionLocked ? "Unlock position" : "Lock position"} type="button">{positionLocked ? "\uD83D\uDD12" : "\uD83D\uDD13"}</button>

@@ -7,3 +7,6 @@
 :global([data-layout="horizontal"]) .section { margin: 0; padding-top: 5px; }
 :global([data-layout="corner"]) .section { padding-top: 9px; }
 @container (min-width: 650px) and (max-height: 280px) { .section { margin: 0; padding-top: 5px; } }
+:global([data-widget="false"][data-mode="expanded"]) .section { margin: 0; padding: 2px 4px 0; }
+:global([data-widget="false"][data-mode="expanded"]) .label { margin-bottom: 11px; font-size: .58rem; }
+:global([data-widget="false"][data-mode="expanded"]) .track { height: 5px; }
