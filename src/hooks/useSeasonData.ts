@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { BrowserSeasonCache, HttpSeasonSource, SeasonService, type SeasonDataOrigin } from "../features/seasons/season.service";
 import type { SeasonDataset } from "../features/seasons/season.types";
+import { getNextConfirmedStart, rollOverConfirmedSeasons } from "../features/seasons/season.rollover";
+import { useCountdown } from "./useCountdown";
 
 export interface SeasonDataState {
   dataset: SeasonDataset;
@@ -44,5 +46,8 @@ export function useSeasonData(): SeasonDataState {
     return () => { window.clearTimeout(initial); window.clearInterval(interval); };
   }, [refresh]);
 
-  return { ...state, refresh, isRefreshing };
+  // One shared timer promotes all games, including games not currently selected.
+  // Refresh still compares the original source timestamp, never a synthetic one.
+  useCountdown(getNextConfirmedStart(state.dataset), false, () => { void refresh(); });
+  return { ...state, dataset: rollOverConfirmedSeasons(state.dataset), refresh, isRefreshing };
 }

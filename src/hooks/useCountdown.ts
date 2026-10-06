@@ -4,6 +4,11 @@ import { getTimeUntil, type DurationParts } from "../features/seasons/season.uti
 export type CountdownStatus = "active" | "elapsed" | "unavailable";
 export interface CountdownSnapshot { status: CountdownStatus; remaining: DurationParts; }
 
+export function getCountdownDelay(remainingMilliseconds: number, showSeconds: boolean, now = Date.now()): number {
+  const interval = showSeconds ? 1_000 : 60_000;
+  return Math.max(1, Math.min(interval - (now % interval), remainingMilliseconds));
+}
+
 export function getCountdownSnapshot(date: string | null | undefined, now = Date.now()): CountdownSnapshot {
   if (!date) return { status: "unavailable", remaining: getTimeUntil(null, now) };
   const target = Date.parse(date);
@@ -20,7 +25,6 @@ export function useCountdown(date: string | null | undefined, showSeconds: boole
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout> | undefined;
     let active = true;
-    const interval = showSeconds ? 1_000 : 60_000;
 
     const update = () => {
       const current = getCountdownSnapshot(date);
@@ -31,7 +35,7 @@ export function useCountdown(date: string | null | undefined, showSeconds: boole
         elapsedCallback.current?.();
       }
       if (current.status === "active") {
-        const delay = interval - (Date.now() % interval);
+        const delay = getCountdownDelay(current.remaining.totalMilliseconds, showSeconds);
         timer = setTimeout(update, delay);
       }
     };

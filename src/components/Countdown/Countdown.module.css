@@ -8,9 +8,6 @@
 .countdown div + div { border-left: 1px solid var(--color-border); }
 .countdown strong { color: var(--color-accent); font: 400 1.65rem/1 var(--font-display); letter-spacing: 0.035em; }
 .countdown span { color: var(--color-text-muted); font-size: 0.52rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; }
-.transition { display: flex; flex-direction: column; gap: 6px; margin: 20px 0 17px; }
-.transition strong { color: var(--color-accent); font-size: 0.82rem; font-weight: 500; }
-.transition span { color: var(--color-text-muted); font-size: 0.68rem; }
 :global([data-placement="topCenter"]) .countdown, :global([data-placement="bottomCenter"]) .countdown { margin: 9px 0 7px; }
 :global([data-placement="topCenter"]) .countdown strong, :global([data-placement="bottomCenter"]) .countdown strong { font-size: 1.25rem; }
 :global([data-placement="topCenter"]) .unknown, :global([data-placement="bottomCenter"]) .unknown { margin: 10px 0 8px; }
@@ -60,5 +57,3 @@
 :global([data-widget="false"][data-mode="expanded"]) .countdown div + div { padding-left: clamp(18px, 2cqw, 34px); }
 :global([data-widget="false"][data-mode="expanded"]) .countdown strong { font-size: clamp(2.25rem, 3.6cqw, 4.5rem); }
 :global([data-widget="false"][data-mode="expanded"]) .countdown span { font-size: .58rem; letter-spacing: .2em; }
-:global([data-widget="false"][data-mode="expanded"]) .transition { margin: 34px 0 26px; }
-:global([data-widget="false"][data-mode="expanded"]) .transition strong { font: 500 clamp(1.15rem, 1.5cqw, 1.6rem)/1.3 var(--font-display); }

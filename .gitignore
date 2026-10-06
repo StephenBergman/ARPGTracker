@@ -26,3 +26,7 @@ dist-ssr
 # Local Codex project instructions and release runbook
 AGENTS.md
 season-source-report.md
+
+# Locally generated Windows installers
+ARPG-Seasons-*.exe
+ARPG-Seasons-*.exe.sig

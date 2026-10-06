@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getCountdownSnapshot } from "./useCountdown";
+import { getCountdownDelay, getCountdownSnapshot } from "./useCountdown";
 
 describe("countdown engine", () => {
   const now = Date.parse("2026-09-28T12:00:00Z");
@@ -8,6 +8,16 @@ describe("countdown engine", () => {
     const result = getCountdownSnapshot("2026-09-29T12:00:00Z", now);
     expect(result.status).toBe("active");
     expect(result.remaining.days).toBe(1);
+  });
+
+  it("wakes at launch before the next compact minute tick", () => {
+    expect(getCountdownDelay(500, false, now + 10_000)).toBe(500);
+    expect(getCountdownDelay(500, true, now + 10_000)).toBe(500);
+  });
+
+  it("retains low-frequency ticks when the start is farther away", () => {
+    expect(getCountdownDelay(100_000, false, now + 10_000)).toBe(50_000);
+    expect(getCountdownDelay(100_000, true, now + 10_250)).toBe(750);
   });
 
   it("handles a date 100 days away", () => {

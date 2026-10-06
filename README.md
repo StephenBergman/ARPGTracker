@@ -58,6 +58,8 @@ To publish, update the version consistently in `package.json`, `src-tauri/Cargo.
 
 ## Season data
 
+When a confirmed countdown reaches zero, its title and start date become the current season in both expanded and compact modes. The next-season panel resets to "Next season has not been announced" and the old progress bar disappears. This also works offline and on restart, while a background refresh checks for newer announcements. Estimated dates remain tentative and show the launch transition instead of becoming current. Derived rollover leaves source/cache timestamps unchanged so newer remote data can still replace it.
+
 The maintainable static source is `data/seasons.json`, with a packaged fallback at `src/data/default-seasons.json`. `SeasonService` supports the required `remote → cache → bundled` fallback chain and also exposes separate local-load and refresh operations so the future UI can render immediately before attempting the network.
 
 Installed applications fetch the repository's raw `data/seasons.json` shortly after launch and once per day, caching only newer validated datasets. Set `VITE_SEASON_DATA_URL` at build time only when a different static endpoint is required.
@@ -82,4 +84,4 @@ The monitor creates review issues; it does not edit or publish season dates. Aft
 
 The configured raw GitHub URL must be accessible without signing in. A private repository returns HTTP 404 to installed clients even when Actions and authenticated Git operations succeed. Do not embed a GitHub token in the app. Either make the repository public with owner approval or publish data in a separate public repository and rebuild the app with `VITE_SEASON_DATA_URL` pointing there. The existing binary updater also requires publicly accessible GitHub Releases.
 
-PD2 Season 14: Alliance is recorded as October 23, 2026 at 17:00 UTC, interpreting the official homepage's ?10am PST? as 10am Pacific local time (daylight time on that date), consistent with its prior reset convention. Season 13 remains current until the launch is verified; announcing a season does not make it current.
+PD2 Season 14: Alliance is recorded as October 23, 2026 at 17:00 UTC, interpreting the official homepage's "10am PST" as 10am Pacific local time (daylight time on that date), consistent with its prior reset convention. Season 13 remains current until the confirmed launch time; at that time the widget automatically displays Season 14 as current.
