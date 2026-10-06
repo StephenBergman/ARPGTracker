@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
+import { candidatesFromHtml, findRelevantCandidates, plainText } from "./season-source-parser.mjs";
 
 const dataset = JSON.parse(await readFile(new URL("../data/seasons.json", import.meta.url), "utf8"));
 const sources = [
@@ -10,11 +11,7 @@ const sources = [
   { games: ["projectDiablo2"], name: "Project Diablo 2", url: "https://www.projectdiablo2.com/" },
   { games: ["torchlightInfinite"], name: "Torchlight: Infinite Steam news", url: "https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=1974050&count=20&maxlength=1200&format=json" },
 ];
-const seasonWords = /\b(season|league|ladder|cycle|launch|release|update|expansion)\b/i;
 
-function plainText(value) {
-  return value.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ").replace(/&(?:nbsp|amp|quot|#39);/g, " ").replace(/\s+/g, " ").trim();
-}
 
 function candidatesFromXml(body) {
   return [...body.matchAll(/<item\b[\s\S]*?<\/item>/gi)].map(([item]) => ({
@@ -29,14 +26,6 @@ function candidatesFromSteam(body) {
   return (parsed.appnews?.newsitems ?? []).map((item) => ({ title: item.title, link: item.url, published: new Date(item.date * 1000).toISOString() }));
 }
 
-function candidatesFromHtml(body, url) {
-  const result = [];
-  for (const match of body.matchAll(/<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi)) {
-    const title = plainText(match[2]);
-    if (title.length >= 12 && title.length <= 180 && seasonWords.test(title)) result.push({ title, link: new URL(match[1], url).href, published: "" });
-  }
-  return result;
-}
 
 const alerts = [];
 const failures = [];
@@ -46,14 +35,7 @@ for (const source of sources) {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const body = await response.text();
     const items = source.url.includes("api.steampowered.com") ? candidatesFromSteam(body) : body.includes("<item") ? candidatesFromXml(body) : candidatesFromHtml(body, source.url);
-    const currentTitles = source.games.map((id) => dataset.games[id].currentSeason.title.toLowerCase());
-    const lastUpdated = Math.min(...source.games.map((id) => Date.parse(dataset.games[id].lastUpdated)));
-    const relevant = items.filter((item) => {
-      if (!seasonWords.test(item.title)) return false;
-      if (currentTitles.some((title) => item.title.toLowerCase().includes(title))) return false;
-      const published = Date.parse(item.published);
-      return !Number.isFinite(published) || published > lastUpdated;
-    }).slice(0, 5);
+    const relevant = findRelevantCandidates(items, source.games.map((id) => dataset.games[id]));
     if (relevant.length) alerts.push({ source, relevant });
   } catch (error) { failures.push(`${source.name}: ${error instanceof Error ? error.message : String(error)}`); }
 }

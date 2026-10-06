@@ -20,6 +20,9 @@ describe("validateSeasonDataset", () => {
     expect(pd2.currentSeason.id).toBe("pd2-season-13");
     expect(pd2.currentSeason.title).toBe("Season 13: Betrayal");
     expect(pd2.currentSeason.startDate).toBe("2026-04-24T17:00:00Z");
+    expect(pd2.nextSeason.title).toBe("Season 14: Alliance");
+    expect(pd2.nextSeason.startDate).toBe("2026-10-23T17:00:00Z");
+    expect(pd2.nextSeason.status).toBe("confirmed");
     expect(pd2.currentSeason).not.toEqual(d2r.currentSeason);
     expect(pd2.source).toBe("https://www.projectdiablo2.com/");
   });

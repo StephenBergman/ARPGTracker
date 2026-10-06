@@ -17,6 +17,7 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 22
+      - run: node --test scripts/season-source-parser.test.mjs
       - id: scan
         run: node scripts/check-season-sources.mjs
       - if: steps.scan.outputs.alerts == 'true'
@@ -60,3 +61,14 @@ jobs:
                 title, labels: ['season-data'], body: `${marker}\n${report}`
               });
             }
+      - name: Verify installed clients can download season data
+        env:
+          SEASON_DATA_URL: https://raw.githubusercontent.com/StephenBergman/ARPGTracker/main/data/seasons.json
+        run: |
+          node --input-type=module <<'JS'
+          const response = await fetch(process.env.SEASON_DATA_URL, { signal: AbortSignal.timeout(20000) });
+          if (!response.ok) throw new Error(`Public season-data endpoint returned HTTP ${response.status}. Installed clients cannot refresh. Check repository visibility and the main/data/seasons.json path.`);
+          const dataset = await response.json();
+          if (dataset.schemaVersion !== 1 || !dataset.games?.projectDiablo2) throw new Error('Public endpoint did not return the expected season dataset.');
+          console.log(`Public season dataset is accessible: ${dataset.updatedAt}`);
+          JS

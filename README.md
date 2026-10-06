@@ -62,7 +62,7 @@ The maintainable static source is `data/seasons.json`, with a packaged fallback 
 
 Installed applications fetch the repository's raw `data/seasons.json` shortly after launch and once per day, caching only newer validated datasets. Set `VITE_SEASON_DATA_URL` at build time only when a different static endpoint is required.
 
-The `Monitor official season sources` GitHub Actions workflow runs daily and can also be dispatched manually. It checks official news, patch-note, and Steam sources and maintains a deduplicated `season-data` issue when it finds a possible newer announcement. A human verifies the announcement before updating the dataset so ambiguous prose cannot silently create a false countdown. Run the same scan locally with `npm run seasons:check`.
+The `Monitor official season sources` GitHub Actions workflow runs daily and can also be dispatched manually. It checks official news, patch-note, and Steam sources and maintains a deduplicated `season-data` issue when it finds a possible newer announcement. A human verifies the announcement before updating the dataset so ambiguous prose cannot silently create a false countdown. Run the same scan locally with `npm run seasons:check`. The scanner includes homepage announcement headings as well as links, and suppresses titles already recorded as current or upcoming seasons. The workflow also checks the public data URL without credentials and fails visibly if installed clients cannot download it.
 
 Season datasets use schema version `1`. Each configured game requires current-season details, a `confirmed`, `estimated`, or `unknown` next-season status, per-game timestamps, and UTC ISO timestamps for every available date. Additions must also be registered in `GAME_IDS` and pass runtime validation.
 
@@ -75,3 +75,11 @@ With widget mode disabled, the standard window remembers its size and exposes bu
 The system tray can restore the widget, switch games, open settings, toggle compact mode or always-on-top, request fresh season data, and explicitly exit. Closing the window hides it to the tray. Selected game, display mode, always-on-top, and window position persist locally; positions from disconnected monitors are rejected and recentered on an available display.
 
 The settings panel controls native launch-at-startup registration, always-on-top, compact mode, countdown seconds, season progress, and manual data refresh while showing the dataset timestamp. Startup is disabled by default and reconciled with the saved preference when the application opens. Single-instance protection restores and focuses the existing widget when another launch is attempted.
+
+### Troubleshooting missing season updates
+
+The monitor creates review issues; it does not edit or publish season dates. After verifying an official announcement, update both `data/seasons.json` and `src/data/default-seasons.json`, advance the dataset `updatedAt` and affected game `lastUpdated`, then commit and push to `main`. Installed clients accept only newer validated datasets. Use **Check Season Data** to refresh immediately; no installer release is needed when the configured public data URL works.
+
+The configured raw GitHub URL must be accessible without signing in. A private repository returns HTTP 404 to installed clients even when Actions and authenticated Git operations succeed. Do not embed a GitHub token in the app. Either make the repository public with owner approval or publish data in a separate public repository and rebuild the app with `VITE_SEASON_DATA_URL` pointing there. The existing binary updater also requires publicly accessible GitHub Releases.
+
+PD2 Season 14: Alliance is recorded as October 23, 2026 at 17:00 UTC, interpreting the official homepage's ?10am PST? as 10am Pacific local time (daylight time on that date), consistent with its prior reset convention. Season 13 remains current until the launch is verified; announcing a season does not make it current.
