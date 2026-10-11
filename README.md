@@ -6,11 +6,13 @@ Supports **Path of Exile, Path of Exile 2, Diablo IV, Diablo II: Resurrected, La
 
 ## Download
 
-**[Download page: GitHub Releases](https://github.com/StephenBergman/ARPGTracker/releases)**
+**[Download Windows x64 installer (v1.2.0)](https://github.com/StephenBergman/ARPGTracker/releases/download/v1.2.0/ARPG-Seasons-1.2.0-x64-local-setup.exe)**
+
+[All releases](https://github.com/StephenBergman/ARPGTracker/releases) · [ZIP with installation guide and checksum](https://github.com/StephenBergman/ARPGTracker/releases/download/v1.2.0/ARPG-Seasons-1.2.0-Windows-x64.zip)
 
 Open the newest published release and expand **Assets**. Download the Windows x64 **setup.exe** installer. You do not need the source-code ZIP, `.sig`, or `latest.json` files.
 
-If no release is listed, a public installer has not been published. A local installation package can also be provided by the maintainer; see [installation instructions](docs/INSTALL.md).
+Version 1.2.0 is a manual-install release and is not offered by the in-app updater. See [installation instructions](docs/INSTALL.md).
 
 ## Install on Windows
 
