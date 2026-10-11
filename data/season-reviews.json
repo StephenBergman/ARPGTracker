@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-11T17:21:30.824Z",
+  "updatedAt": "2026-10-11T17:22:14.180Z",
   "reviews": [
     {
       "id": "e0a0fb278bd76c072ff70e340019cc413197d4196d10e7213f85075fea480efc",
@@ -79,13 +79,15 @@
       "gameId": "lastEpoch",
       "headline": "Watch the Season 5 Trailer now",
       "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1844115010495297",
-      "evidence": "[p]The wait is over. The full trailer for [b]Last Epoch: Rage of the Frostborn[/b] is here and you can watch it now:[/p][p][/p][p][dynamiclink href=\"https://www.youtube.com/watch?v=3wyM0yS3Gs8\"][/dynamiclink][/p][h2]Season 5: Road to Launch[/h2][p]The trailer is just the beginning as we have a bunch of things happening up until the launch of Season 5 including special dev streams, developer tour stops with Raxxanterax and AaronActionRPG, Hype Week and more![/p][p]During Hype Week, each day we will reveal details about the new seasonal mechanic Rage of Morditas, the Morditas boss fight, Faction updates, new skills, new items and quality of life improvements. We will be right here, dropping something",
+      "evidence": "",
       "evidenceHash": "7598940bbf52f65ad253e2d6e966e096909434a340e42f5152753984e8f08a78",
       "reason": "Launch time is missing, ambiguous, or has an unclear year/timezone",
       "discoveredAt": "2026-10-11T16:37:13.057Z",
       "baseline": "f7853e9565100c57589aaa79eb1cd84ab0d0a11652626bece76af7a73bf2251c",
-      "status": "pending",
-      "suggestedTitle": "Season 5: Road to"
+      "status": "denied",
+      "suggestedTitle": "Season 5: Road to",
+      "decidedAt": "2026-10-11T17:22:14.180Z",
+      "decidedBy": "StephenBergman"
     },
     {
       "id": "b296e92a4def02ed1933870776e80036eec8cd45af839a3798fda5f5cf919a3c",
