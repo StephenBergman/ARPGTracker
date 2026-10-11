@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-11T17:16:59.552Z",
+  "updatedAt": "2026-10-11T17:17:33.453Z",
   "reviews": [
     {
       "id": "e0a0fb278bd76c072ff70e340019cc413197d4196d10e7213f85075fea480efc",
@@ -21,12 +21,14 @@
       "gameId": "poe2",
       "headline": "Path of Exile 2: 0.5.5 Event League & Duelist Deep Dive",
       "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1842212951301197",
-      "evidence": "[h3]Play the Forbidden Rites Event on September 4[/h3] During GGG Live earlier today, we revealed our next 0.5.5 update for Path of Exile 2, releasing September 4 at 1 PM PDT! This patch introduces the new event league, Forbidden Rites, featuring 8 new challenges and exclusive rewards, as well as a major Trial of Chaos overhaul and more. We’ll post the patch notes next week, closer to the release. [img]{STEAM_CLAN_IMAGE}/44770983/206d5e3d5def87e5c0f76b204e996dd6d5e1c63a.png[/img] [h3]Duelist Deep Dive[/h3] The Duelist is joining the fight in the [url=https://pathofexile2.com/register]Path of Exile 2 1.0 Full Release[/url] on December 11. Take a closer look at the long-awaited class and",
+      "evidence": "",
       "evidenceHash": "bf4b0287dc94fdc71e6ea5065f19ed329fae72517f49b758f1de43f58f526e11",
       "reason": "No unambiguous season title",
       "discoveredAt": "2026-10-11T16:37:13.057Z",
       "baseline": "5368b3303e145e4128452e29321bc1f3acb023f04f12440e2945dab828473f0e",
-      "status": "pending"
+      "status": "denied",
+      "decidedAt": "2026-10-11T17:17:33.453Z",
+      "decidedBy": "StephenBergman"
     },
     {
       "id": "95304de848aa252e22f71f455cbae64ebc3270d7b5058eb2d40f0e762aad46f8",
