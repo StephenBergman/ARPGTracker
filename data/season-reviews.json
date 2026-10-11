@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-11T17:17:33.453Z",
+  "updatedAt": "2026-10-11T17:19:00.308Z",
   "reviews": [
     {
       "id": "e0a0fb278bd76c072ff70e340019cc413197d4196d10e7213f85075fea480efc",
@@ -35,12 +35,14 @@
       "gameId": "diablo4",
       "headline": "Hunt the Death Cult in Season of Death Awakening",
       "source": "https://news.blizzard.com/en-us/article/24268702/hunt-the-death-cult-in-season-of-death-awakening",
-      "evidence": "Hunt the Death Cult in Season of Death Awakening — Diablo IV — Blizzard News Diablo IV Hunt the Death Cult in Season of Death Awakening Blizzard Entertainment The Age of Hatred has ended and the veil of death looms over Sanctuary. On June 30 , at 10:00 a.m. PDT , Season of Death Awakening descends in the wake of Mephisto’s defeat. Seek out Pandemonium Ruptures, try out new builds and supercharge favorites with Mythic Uniques 3.0, ascend the newly released Tower and Leaderboards to earn new rewards, and carve your own fortune as Solo Self Found. Thank you to",
+      "evidence": "",
       "evidenceHash": "9554365c3cb3f29805e98c0f9f12108f40d5c181cd207a6480d369ea8a970d60",
       "reason": "No unambiguous season title",
       "discoveredAt": "2026-10-11T16:37:13.057Z",
       "baseline": "00f81b3dc486f7316981772635456871399ff6afb1b5f4dfbe58ba9cdaa0e55d",
-      "status": "pending"
+      "status": "denied",
+      "decidedAt": "2026-10-11T17:19:00.308Z",
+      "decidedBy": "StephenBergman"
     },
     {
       "id": "9c7e3d25696e60d6c2261e42ed679c8637c5c065292109da19021977a59ec6c5",
