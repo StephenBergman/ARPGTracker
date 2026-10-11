@@ -35,7 +35,15 @@ describe("league launch transition", () => {
 
   it("does not launch an unknown date even if a timestamp exists", () => {
     const markup = renderToStaticMarkup(<CompactWidget season={{ ...season, nextSeason: { ...season.nextSeason, status: "unknown" } }} shortName="POE" checkingForUpdate={false} onElapsed={() => {}} />);
-    expect(markup).toContain("Next season not announced");
+    expect(markup).toContain("New league");
+    expect(markup).toContain("Date unknown");
     expect(markup).not.toContain("launch time");
+  });
+  it("displays an approved title without inventing a countdown", () => {
+    const markup = renderToStaticMarkup(<Countdown nextSeason={{ title: "Reviewed season", startDate: null, status: "unknown" }} />);
+    expect(markup).toContain("Reviewed season");
+    expect(markup).toContain("Season start date has not been announced");
+    expect(markup).not.toContain("Next season has not been announced");
+    expect(markup).not.toContain("NaN");
   });
 });

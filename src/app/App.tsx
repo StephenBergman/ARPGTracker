@@ -6,6 +6,7 @@ import { InsightsPanel } from "../components/InsightsPanel/InsightsPanel";
 import { GameSelector, type WidgetContentLayout } from "../components/GameSelector/GameSelector";
 import { SeasonProgress } from "../components/SeasonProgress/SeasonProgress";
 import { SettingsPanel } from "../components/SettingsPanel/SettingsPanel";
+import { SeasonReviewPanel } from "../components/SeasonReviewPanel/SeasonReviewPanel";
 import { WidgetShell } from "../components/WidgetShell/WidgetShell";
 import { GAME_DEFINITIONS } from "../features/seasons/game.config";
 import type { GameId } from "../features/seasons/season.types";
@@ -14,6 +15,7 @@ import { useDisplayMode } from "../hooks/useDisplayMode";
 import { useDesktopIntegration } from "../hooks/useDesktopIntegration";
 import { useDisplayPreferences } from "../hooks/useDisplayPreferences";
 import { useAppUpdater } from "../hooks/useAppUpdater";
+import { useSeasonReviewer } from "../hooks/useSeasonReviewer";
 import { loadSelectedGame } from "../features/settings/settings.store";
 import { GAME_THEMES } from "../themes";
 import styles from "./App.module.css";
@@ -21,12 +23,15 @@ import styles from "./App.module.css";
 export function App() {
   const [selectedGameId, setSelectedGameId] = useState<GameId>(loadSelectedGame);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [reviewsOpen, setReviewsOpen] = useState(false);
   const { displayMode, setDisplayMode, toggleDisplayMode } = useDisplayMode();
   const preferences = useDisplayPreferences();
-  const appUpdater = useAppUpdater();
   const { dataset, origin, refresh, isRefreshing } = useSeasonData();
-  const openSettings = useCallback(() => { setDisplayMode("expanded"); setSettingsOpen(true); }, [setDisplayMode]);
-  const { alwaysOnTop, setAlwaysOnTop, widgetMode, setWidgetMode, positionLocked, setPositionLocked, widgetPlacement, setWidgetPlacement } = useDesktopIntegration({ selectedGameId, setSelectedGameId, displayMode, setDisplayMode, settingsOpen, refresh, openSettings });
+  const openReviews = useCallback(() => { setDisplayMode("expanded"); setSettingsOpen(false); setReviewsOpen(true); }, [setDisplayMode]);
+  const reviewer = useSeasonReviewer(openReviews, () => { void refresh(); });
+  const appUpdater = useAppUpdater(!reviewer.enabled);
+  const openSettings = useCallback(() => { setDisplayMode("expanded"); setReviewsOpen(false); setSettingsOpen(true); }, [setDisplayMode]);
+  const { alwaysOnTop, setAlwaysOnTop, widgetMode, setWidgetMode, positionLocked, setPositionLocked, widgetPlacement, setWidgetPlacement } = useDesktopIntegration({ selectedGameId, setSelectedGameId, displayMode, setDisplayMode, settingsOpen: settingsOpen || reviewsOpen, refresh, openSettings });
   const selectedSeason = dataset.games[selectedGameId];
   const now = Date.now();
   const gameDefinition = GAME_DEFINITIONS.find((game) => game.id === selectedGameId) ?? GAME_DEFINITIONS[0];
@@ -35,6 +40,8 @@ export function App() {
   const widgetLayout: WidgetContentLayout = !widgetMode ? "standard" : widgetPlacement === "topCenter" || widgetPlacement === "bottomCenter" ? "horizontal" : widgetPlacement === "leftCenter" || widgetPlacement === "rightCenter" ? "vertical" : widgetPlacement === "free" ? "standard" : "corner";
   return (
     <WidgetShell theme={GAME_THEMES[selectedGameId]} displayMode={displayMode} alwaysOnTop={alwaysOnTop} widgetMode={widgetMode} positionLocked={positionLocked} widgetPlacement={widgetPlacement} onToggleDisplayMode={toggleDisplayMode} onToggleAlwaysOnTop={() => setAlwaysOnTop((value) => !value)} onTogglePositionLock={() => setPositionLocked((value) => !value)} onOpenSettings={openSettings}>
+      <div className={styles.body} inert={reviewsOpen}>
+      {reviewer.enabled && <button className={styles.reviews} data-window-drag="disabled" onClick={openReviews} type="button">Personal reviews{reviewer.pending.length ? ` ? ${reviewer.pending.length} pending` : ""}</button>}
       {displayMode === "compact" ? <CompactWidget season={selectedSeason} shortName={gameDefinition.shortName} checkingForUpdate={isRefreshing} onElapsed={() => { void refresh(); }} /> : <><GameSelector games={GAME_DEFINITIONS} selectedGameId={selectedGameId} onSelect={setSelectedGameId} layout={widgetLayout} />
       <div className={styles.workspace} data-standard={!widgetMode}>
       <main className={styles.content} data-layout={widgetLayout}>
@@ -46,6 +53,8 @@ export function App() {
       </main>
       {!widgetMode && <InsightsPanel gameId={selectedGameId} seasonTitle={selectedSeason.currentSeason.title} />}
       </div></>}
+      </div>
+      {reviewer.enabled && reviewsOpen && <SeasonReviewPanel reviewer={reviewer} onClose={() => setReviewsOpen(false)} />}
       {settingsOpen && <SettingsPanel displayMode={displayMode} alwaysOnTop={alwaysOnTop} widgetMode={widgetMode} positionLocked={positionLocked} widgetPlacement={widgetPlacement} launchAtStartup={preferences.launchAtStartup} startupSyncStatus={preferences.startupSyncStatus} showSeconds={preferences.showSeconds} showSeasonProgress={preferences.showSeasonProgress} lastUpdated={dataset.updatedAt} isRefreshing={isRefreshing} appUpdater={appUpdater} onDisplayMode={setModeFromSettings} onAlwaysOnTop={setAlwaysOnTop} onWidgetMode={(value) => { if (!value) setDisplayMode("expanded"); else setSettingsOpen(false); setWidgetMode(value); }} onPositionLocked={setPositionLocked} onWidgetPlacement={setPlacementFromSettings} onLaunchAtStartup={preferences.setLaunchAtStartup} onShowSeconds={preferences.setShowSeconds} onShowSeasonProgress={preferences.setShowSeasonProgress} onRefresh={() => { void refresh(); }} onClose={() => setSettingsOpen(false)} />}
     </WidgetShell>
   );

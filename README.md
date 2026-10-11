@@ -12,7 +12,7 @@ A lightweight Windows-first desktop widget for ARPG season information and count
 
 ## Prerequisites
 
-- Node.js 20 or newer
+- Node.js 22.18 or newer (the season publisher uses Node's built-in TypeScript support)
 - Rust stable with Cargo
 - Microsoft C++ Build Tools and WebView2 on Windows
 
@@ -24,6 +24,8 @@ npm run dev
 npm run typecheck
 npm test
 npm run build
+npm run seasons:check
+npm run seasons:update
 npm run tauri dev
 npm run tauri build
 ```
@@ -62,9 +64,15 @@ When a confirmed countdown reaches zero, its title and start date become the cur
 
 The maintainable static source is `data/seasons.json`, with a packaged fallback at `src/data/default-seasons.json`. `SeasonService` supports the required `remote → cache → bundled` fallback chain and also exposes separate local-load and refresh operations so the future UI can render immediately before attempting the network.
 
-Installed applications fetch the repository's raw `data/seasons.json` shortly after launch and once per day, caching only newer validated datasets. Set `VITE_SEASON_DATA_URL` at build time only when a different static endpoint is required.
+Applications built from this version fetch the repository's raw `data/seasons.json` shortly after launch and every six hours, caching only newer validated datasets. Previously installed builds retain their existing daily refresh interval until upgraded, but still receive published season updates automatically. Set `VITE_SEASON_DATA_URL` at build time only when a different static endpoint is required.
 
-The `Monitor official season sources` GitHub Actions workflow runs daily and can also be dispatched manually. It checks official news, patch-note, and Steam sources and maintains a deduplicated `season-data` issue when it finds a possible newer announcement. A human verifies the announcement before updating the dataset so ambiguous prose cannot silently create a false countdown. Run the same scan locally with `npm run seasons:check`. The scanner includes homepage announcement headings as well as links, and suppresses titles already recorded as current or upcoming seasons. The workflow also checks the public data URL without credentials and fails visibly if installed clients cannot download it.
+The `Monitor official season sources` GitHub Actions workflow checks all seven games every six hours and can also be dispatched manually. It extracts named season launches and precise timezone-qualified launch times, validates the resulting dataset with the same schema as the app, runs the tests, and commits verified changes to both season files on `main`. Installed clients receive these changes through their existing data refresh without a new installer. The schedule is best effort, not an instant notification service; source scanning and client refresh can together take about twelve hours, plus GitHub scheduling delays.
+
+Sources are configured in `scripts/season-sources.mjs`: developer-published Steam announcements for Path of Exile, Path of Exile 2, and Last Epoch; Blizzard's official news feeds and article bodies for Diablo IV and Diablo II: Resurrected; and the official Project Diablo 2 and Torchlight: Infinite homepages. Third-party Steam news and off-site article links are rejected. Source failures preserve existing season information and appear in the scan report and review issue.
+
+Automatic extraction is deliberately conservative. It does not interpret every possible announcement format. Missing times/timezones, undated homepage announcements without a year, conflicting titles or dates, changes to an already-confirmed launch, and preview/beta/stream announcements require review. A dated article can supply an omitted year only when there is one possible year within 180 days of publication. Invalid calendar dates and timezone abbreviations that disagree with daylight saving time are rejected. These cases retain the existing data and maintain a deduplicated `season-data` issue; no guessed countdown is published. Adding support for a new announcement format requires updating the extractor and its tests.
+
+Run `npm run seasons:check` for a dry run, or `npm run seasons:update` to write eligible updates locally. Both commands write `season-source-report.md`; neither pushes changes. The workflow saves this report as an artifact. After an automatic update, the scanner is idempotent and does not keep advancing timestamps for unchanged data.
 
 Season datasets use schema version `1`. Each configured game requires current-season details, a `confirmed`, `estimated`, or `unknown` next-season status, per-game timestamps, and UTC ISO timestamps for every available date. Additions must also be registered in `GAME_IDS` and pass runtime validation.
 
@@ -80,8 +88,28 @@ The settings panel controls native launch-at-startup registration, always-on-top
 
 ### Troubleshooting missing season updates
 
-The monitor creates review issues; it does not edit or publish season dates. After verifying an official announcement, update both `data/seasons.json` and `src/data/default-seasons.json`, advance the dataset `updatedAt` and affected game `lastUpdated`, then commit and push to `main`. Installed clients accept only newer validated datasets. Use **Check Season Data** to refresh immediately; no installer release is needed when the configured public data URL works.
+To activate automatic publishing, commit and push the workflow and scripts to `main` and ensure GitHub Actions is enabled. The workflow requests `contents: write` and `issues: write`; repository/organization policies and branch protection must permit the Actions bot to push data commits to `main`. If a push is rejected, the workflow fails visibly instead of claiming publication. You can test activation with **Actions → Monitor official season sources → Run workflow**. No secret, API key, backend, or desktop scraping is required.
+
+If an announcement needs review, verify it and update both `data/seasons.json` and `src/data/default-seasons.json`, advance the dataset `updatedAt` and affected game `lastUpdated`, then commit and push to `main`. Installed clients accept only newer validated datasets. Use **Check Season Data** to refresh immediately; no installer release is needed when the configured public data URL works. The monitor does not modify application binaries or publish an application release.
 
 The configured raw GitHub URL must be accessible without signing in. A private repository returns HTTP 404 to installed clients even when Actions and authenticated Git operations succeed. Do not embed a GitHub token in the app. Either make the repository public with owner approval or publish data in a separate public repository and rebuild the app with `VITE_SEASON_DATA_URL` pointing there. The existing binary updater also requires publicly accessible GitHub Releases.
+
+### Personal season reviewer
+
+The personal Windows build adds a **Personal reviews** button and opens a review popup when it finds new pending announcements. Only ambiguous announcements enter this queue; verified announcements still publish automatically. Standard builds do not show review controls, fetch the review queue, or register the native publishing/credential commands.
+
+To activate:
+
+1. Push the monitor, `.github/workflows/season-review.yml`, scripts, and `data/season-reviews.json` to `main`. Both workflows need permission to push data commits to `main`; they share a concurrency group so scans and review decisions do not publish simultaneously.
+2. Build your private installer with `npm run reviewer:build`, or run `npm run reviewer:dev` for development. These commands use the `personal-reviewer` Cargo feature and `src-tauri/tauri.reviewer.conf.json`. The separate **ARPG Seasons Reviewer** name and application identifier allow it to coexist with the public client. Do not distribute this installer as the public release. Public release workflows use the default build, which excludes the reviewer commands.
+3. Install the reviewer build and open **Personal reviews**. Enter a fine-grained GitHub token belonging to **StephenBergman**, restricted to **ARPGTracker**, with **Actions: read/write**, **Contents: read**, and the automatically included Metadata access. Enter it only in the client, never in source files or this repository. The native process checks the account identity and stores the token in the current Windows user's Credential Manager. **Disconnect** removes that saved credential. No token is returned to JavaScript after setup, embedded in an installer, or sent to other clients.
+
+Each pending item shows its game, official source, a short excerpt, the reason it needs review, and currently published season details. Correct the proposed title and choose current or next season. Enter launch times in **UTC**, and distinguish confirmed, estimated, or unknown dates. Unknown dates can publish an announced next-season title without creating a countdown.
+
+**Approve & publish** dispatches the owner-only GitHub review workflow. It revalidates the queue and season schema, rejects a changed baseline, runs the tests, and commits the shared dataset and bundled fallback together with the decision record. The popup confirms publication only after the committed queue says approved. Other clients receive the change on their next automatic or manual season-data refresh. Workflow failures and pending publication remain visible instead of showing a false success.
+
+**Deny** records the decision without changing public season data. The same evidence is suppressed on later scans, including automatic extraction; changed evidence can create a fresh review. Approvals, denials, source fingerprints, and short excerpts live in `data/season-reviews.json`. These are public repository metadata; the credential remains private. Stale proposals are superseded instead of overwriting newer data.
+
+The personal client checks the queue at startup, every six hours, and when you choose **Refresh**. It briefly polls every five seconds while a submitted decision is publishing, for up to three minutes; otherwise it does not poll frequently. Closing a popup leaves its review pending. This build disables ordinary application update checks so a public installer cannot replace it and remove its review controls; update it by rebuilding/installing your personal build. Season-data updates continue normally. The personal installer does not generate signed updater artifacts.
 
 PD2 Season 14: Alliance is recorded as October 23, 2026 at 17:00 UTC, interpreting the official homepage's "10am PST" as 10am Pacific local time (daylight time on that date), consistent with its prior reset convention. Season 13 remains current until the confirmed launch time; at that time the widget automatically displays Season 14 as current.

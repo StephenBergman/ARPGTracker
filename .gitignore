@@ -30,3 +30,16 @@ season-source-report.md
 # Locally generated Windows installers
 ARPG-Seasons-*.exe
 ARPG-Seasons-*.exe.sig
+
+# Local credentials and environment overrides (never publish)
+.env
+.env.*
+!.env.example
+*.key
+*.key.pub
+*.p12
+*.pfx
+
+# Personal reviewer installers, including renamed local copies
+*Reviewer*.exe
+*Reviewer*.exe.sig

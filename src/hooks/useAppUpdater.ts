@@ -6,9 +6,9 @@ const UPDATE_INTERVAL_MS = 6 * 60 * 60 * 1000;
 const INITIAL_CHECK_DELAY_MS = 10_000;
 
 export type AppUpdateStatus = "idle" | "checking" | "available" | "downloading" | "installing" | "current" | "error";
-export interface AppUpdaterState { currentVersion: string; availableVersion: string | null; releaseNotes: string | null; progress: number | null; status: AppUpdateStatus; checkForUpdate: () => Promise<void>; installUpdate: () => Promise<void>; }
+export interface AppUpdaterState { enabled: boolean; currentVersion: string; availableVersion: string | null; releaseNotes: string | null; progress: number | null; status: AppUpdateStatus; checkForUpdate: () => Promise<void>; installUpdate: () => Promise<void>; }
 
-export function useAppUpdater(): AppUpdaterState {
+export function useAppUpdater(enabled = true): AppUpdaterState {
   const updateRef = useRef<Update | null>(null);
   const checkingRef = useRef(false);
   const [currentVersion, setCurrentVersion] = useState("1.1.0");
@@ -18,7 +18,7 @@ export function useAppUpdater(): AppUpdaterState {
   const [status, setStatus] = useState<AppUpdateStatus>("idle");
 
   const checkForUpdate = useCallback(async () => {
-    if (checkingRef.current) return;
+    if (!enabled || checkingRef.current) return;
     checkingRef.current = true;
     setStatus("checking");
     try {
@@ -31,11 +31,11 @@ export function useAppUpdater(): AppUpdaterState {
       setStatus(update ? "available" : "current");
     } catch { setStatus("error"); }
     finally { checkingRef.current = false; }
-  }, []);
+  }, [enabled]);
 
   const installUpdate = useCallback(async () => {
     const update = updateRef.current;
-    if (!update) return;
+    if (!enabled || !update) return;
     setStatus("downloading");
     setProgress(0);
     let downloaded = 0;
@@ -48,14 +48,15 @@ export function useAppUpdater(): AppUpdaterState {
         setProgress(total ? Math.min(99, Math.round((downloaded / total) * 100)) : null);
       }, { restartAfterInstall: true, timeout: 120_000 });
     } catch { setProgress(null); setStatus("error"); }
-  }, []);
+  }, [enabled]);
 
   useEffect(() => {
     void getVersion().then(setCurrentVersion).catch(() => { /* Browser preview. */ });
+    if (!enabled) return;
     const initial = window.setTimeout(() => { void checkForUpdate(); }, INITIAL_CHECK_DELAY_MS);
     const interval = window.setInterval(() => { void checkForUpdate(); }, UPDATE_INTERVAL_MS);
     return () => { window.clearTimeout(initial); window.clearInterval(interval); if (updateRef.current) void updateRef.current.close(); };
-  }, [checkForUpdate]);
+  }, [checkForUpdate, enabled]);
 
-  return { currentVersion, availableVersion, releaseNotes, progress, status, checkForUpdate, installUpdate };
+  return { enabled, currentVersion, availableVersion, releaseNotes, progress, status, checkForUpdate, installUpdate };
 }

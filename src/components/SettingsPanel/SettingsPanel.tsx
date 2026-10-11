@@ -36,7 +36,7 @@ export function SettingsPanel(props: SettingsPanelProps) {
   const startupDescription = props.startupSyncStatus === "syncing" ? "Updating Windows startup…" : props.startupSyncStatus === "error" ? "Windows startup could not be updated" : "Start automatically after sign-in";
   const updater = props.appUpdater;
   const updateBusy = updater.status === "checking" || updater.status === "downloading" || updater.status === "installing";
-  const updateMessage = updater.status === "available" ? `Version ${updater.availableVersion} is available` : updater.status === "checking" ? "Checking for application updates…" : updater.status === "downloading" ? `Downloading${updater.progress === null ? "…" : ` ${updater.progress}%`}` : updater.status === "installing" ? "Installing and restarting…" : updater.status === "current" ? "You have the latest version" : updater.status === "error" ? "Unable to check for updates" : "Checks automatically every 6 hours";
+  const updateMessage = !updater.enabled ? "Personal reviewer builds are updated manually" : updater.status === "available" ? `Version ${updater.availableVersion} is available` : updater.status === "checking" ? "Checking for application updates…" : updater.status === "downloading" ? `Downloading${updater.progress === null ? "…" : ` ${updater.progress}%`}` : updater.status === "installing" ? "Installing and restarting…" : updater.status === "current" ? "You have the latest version" : updater.status === "error" ? "Unable to check for updates" : "Checks automatically every 6 hours";
   return <section aria-label="Settings" aria-modal="true" className={styles.panel} data-window-drag="disabled" onKeyDown={handleKeyDown} ref={panelRef} role="dialog">
     <header><div><p>Preferences</p><h2>Settings</h2></div><button aria-label="Close settings" onClick={props.onClose} ref={closeButtonRef} type="button">&#215;</button></header>
     <div className={styles.group}><h3>General</h3>
@@ -55,7 +55,7 @@ export function SettingsPanel(props: SettingsPanelProps) {
       <button className={styles.refresh} disabled={props.isRefreshing} onClick={props.onRefresh} type="button">{props.isRefreshing ? "Checking…" : "Refresh season data"}</button>
     </div>
     <div className={styles.group}><h3>Application</h3><div className={styles.updated}><span>Installed version</span><strong>{updater.currentVersion}</strong><span className={styles.updateMessage}>{updateMessage}</span>{updater.status === "available" && updater.releaseNotes && <span className={styles.releaseNotes}>{updater.releaseNotes}</span>}</div>
-      {updater.status === "available" ? <button className={styles.refresh} onClick={() => { void updater.installUpdate(); }} type="button">Update and restart</button> : <button className={styles.refresh} disabled={updateBusy} onClick={() => { void updater.checkForUpdate(); }} type="button">{updater.status === "checking" ? "Checking…" : "Check for app update"}</button>}
+      {updater.enabled && updater.status === "available" ? <button className={styles.refresh} onClick={() => { void updater.installUpdate(); }} type="button">Update and restart</button> : <button className={styles.refresh} disabled={!updater.enabled || updateBusy} onClick={() => { void updater.checkForUpdate(); }} type="button">{updater.status === "checking" ? "Checking…" : "Check for app update"}</button>}
     </div>
   </section>;
 }

@@ -1,7 +1,9 @@
 const seasonWords = /\b(season|league|ladder|cycle|launch|release|update|expansion)\b/i;
 
 export function plainText(value) {
-  return value.replace(/<!--[\s\S]*?-->/g, " ").replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ").replace(/&(?:nbsp|amp|quot|#39);/g, " ").replace(/\s+/g, " ").trim();
+  return value.replace(/<!--[\s\S]*?-->/g, " ").replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ")
+    .replace(/&(nbsp|amp|quot|apos|#39|#x27|#8217|rsquo);/gi, (_, entity) => ({ nbsp: " ", amp: "&", quot: '"', apos: "'", "#39": "'", "#x27": "'", "#8217": "\u2019", rsquo: "\u2019" })[entity.toLowerCase()])
+    .replace(/\s+/g, " ").trim();
 }
 
 export function candidatesFromHtml(body, url) {

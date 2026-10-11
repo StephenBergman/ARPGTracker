@@ -13,7 +13,7 @@ export interface SeasonDataState {
 
 type StoredSeasonData = Pick<SeasonDataState, "dataset" | "origin">;
 const DEFAULT_SEASON_DATA_URL = "https://raw.githubusercontent.com/StephenBergman/ARPGTracker/main/data/seasons.json";
-const SEASON_REFRESH_INTERVAL_MS = 24 * 60 * 60 * 1000;
+const SEASON_REFRESH_INTERVAL_MS = 6 * 60 * 60 * 1000;
 const INITIAL_REFRESH_DELAY_MS = 5_000;
 
 export function useSeasonData(): SeasonDataState {

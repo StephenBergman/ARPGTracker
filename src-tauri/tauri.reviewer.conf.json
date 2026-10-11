@@ -1,0 +1,8 @@
+{
+  "productName": "ARPG Seasons Reviewer",
+  "identifier": "com.stephen.arpg-seasons-reviewer",
+  "bundle": {
+    "createUpdaterArtifacts": false,
+    "shortDescription": "Stephen's personal season review client."
+  }
+}

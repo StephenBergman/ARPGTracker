@@ -1,4 +1,18 @@
+#[cfg(all(feature = "personal-reviewer", target_os = "windows"))]
+mod reviewer;
 mod tray;
+
+#[tauri::command]
+fn reviewer_status() -> serde_json::Value {
+    #[cfg(all(feature = "personal-reviewer", target_os = "windows"))]
+    {
+        serde_json::json!({ "enabled": true, "connected": reviewer::read_token().ok().flatten().is_some() })
+    }
+    #[cfg(not(all(feature = "personal-reviewer", target_os = "windows")))]
+    {
+        serde_json::json!({ "enabled": false, "connected": false })
+    }
+}
 
 #[tauri::command]
 fn watch_widget_drag_release(app: tauri::AppHandle) {
@@ -27,10 +41,27 @@ fn watch_widget_drag_release(app: tauri::AppHandle) {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
+    let builder = tauri::Builder::default();
+    #[cfg(all(feature = "personal-reviewer", target_os = "windows"))]
+    let builder = builder.invoke_handler(tauri::generate_handler![
+        watch_widget_drag_release,
+        reviewer_status,
+        reviewer::reviewer_connect,
+        reviewer::reviewer_disconnect,
+        reviewer::reviewer_load,
+        reviewer::reviewer_submit,
+        reviewer::reviewer_run_status
+    ]);
+    #[cfg(not(all(feature = "personal-reviewer", target_os = "windows")))]
+    let builder = builder.invoke_handler(tauri::generate_handler![
+        watch_widget_drag_release,
+        reviewer_status
+    ]);
+    #[cfg(not(all(feature = "personal-reviewer", target_os = "windows")))]
+    let builder = builder.plugin(tauri_plugin_updater::Builder::new().build());
+    builder
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_opener::init())
-        .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_single_instance::init(
             |app, _arguments, _working_directory| {
                 use tauri::Manager;
@@ -42,7 +73,6 @@ pub fn run() {
             },
         ))
         .plugin(tauri_plugin_autostart::Builder::new().build())
-        .invoke_handler(tauri::generate_handler![watch_widget_drag_release])
         .setup(|app| {
             tray::create(app)?;
             Ok(())

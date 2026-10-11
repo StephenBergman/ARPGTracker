@@ -1,0 +1,43 @@
+name: Decide season review
+run-name: Season review by ${{ github.actor }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      decision:
+        description: Validated season review decision JSON
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: season-data-publisher
+  cancel-in-progress: false
+
+jobs:
+  decide:
+    if: github.actor == 'StephenBergman' && github.repository == 'StephenBergman/ARPGTracker' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Apply the owner's decision
+        env:
+          SEASON_REVIEW_DECISION: ${{ inputs.decision }}
+        run: node scripts/decide-season-review.mjs
+      - run: npm test
+      - name: Publish approved data and record the decision
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/seasons.json src/data/default-seasons.json data/season-reviews.json
+          git commit -m "Record owner season review decision"
+          git push origin HEAD:main

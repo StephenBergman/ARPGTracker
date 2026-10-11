@@ -4,7 +4,16 @@ import { getNextConfirmedStart, rollOverConfirmedSeasons } from "./season.rollov
 import type { SeasonDataset } from "./season.types";
 import { getSeasonProgress, getTimeSince } from "./season.utils";
 
-const data = () => structuredClone(bundled) as SeasonDataset;
+// Fixed transition fixtures keep these tests independent of live season updates.
+const data = (): SeasonDataset => {
+  const dataset = structuredClone(bundled) as SeasonDataset;
+  for (const game of Object.values(dataset.games)) game.nextSeason = { title: null, startDate: null, status: "unknown" };
+  dataset.games.lastEpoch.currentSeason = { id: "le-season-4", title: "Season 4", startDate: "2026-03-26T16:00:00Z", endDate: null };
+  dataset.games.lastEpoch.nextSeason = { title: "Season 5: Rage of the Frostborn", startDate: "2026-10-01T16:00:00Z", status: "confirmed" };
+  dataset.games.projectDiablo2.currentSeason = { id: "pd2-season-13", title: "Season 13", startDate: "2026-04-24T17:00:00Z", endDate: null };
+  dataset.games.projectDiablo2.nextSeason = { title: "Season 14: Alliance", startDate: "2026-10-23T17:00:00Z", status: "confirmed" };
+  return dataset;
+};
 const launch = Date.parse("2026-10-01T16:00:00Z");
 
 describe("confirmed season rollover", () => {

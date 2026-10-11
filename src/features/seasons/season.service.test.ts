@@ -39,7 +39,7 @@ describe("SeasonService", () => {
     const cache = new MemoryCache(older);
     const result = await new SeasonService(cache).loadLocal();
     expect(result.origin).toBe("bundled");
-    expect(result.data.games.projectDiablo2.currentSeason.id).toBe("pd2-season-13");
+    expect(result.data.games.projectDiablo2.currentSeason.id).toBe(bundled.games.projectDiablo2.currentSeason.id);
     expect(cache.written?.updatedAt).toBe(bundled.updatedAt);
   });
 

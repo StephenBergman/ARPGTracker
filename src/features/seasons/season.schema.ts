@@ -1,4 +1,4 @@
-import { GAME_IDS, type GameId, type GameSeasonData, type SeasonDataset, type SeasonDateStatus } from "./season.types";
+import { GAME_IDS, type GameId, type GameSeasonData, type SeasonDataset, type SeasonDateStatus } from "./season.types.ts";
 
 export type ValidationResult =
   | { success: true; data: SeasonDataset }

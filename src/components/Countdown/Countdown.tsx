@@ -10,7 +10,7 @@ interface CountdownProps { nextSeason: NextSeason; showSeconds?: boolean; checki
 export function Countdown({ nextSeason, showSeconds = true, checkingForUpdate = false, onElapsed }: CountdownProps) {
   const countdown = useCountdown(nextSeason.status === "unknown" ? null : nextSeason.startDate, showSeconds, onElapsed);
   if (countdown.status === "unavailable" || nextSeason.status === "unknown") {
-    return <section className={styles.section} aria-label="Next season"><p className={styles.eyebrow}>Next season</p><p className={styles.unknown}>Next season has not been announced</p><StatusBadge status="unknown" /></section>;
+    return <section className={styles.section} aria-label="Next season"><p className={styles.eyebrow}>{nextSeason.title ?? "Next season"}</p><p className={styles.unknown}>{nextSeason.title ? "Season start date has not been announced" : "Next season has not been announced"}</p><StatusBadge status="unknown" /></section>;
   }
   const duration = countdown.remaining;
   const units = [

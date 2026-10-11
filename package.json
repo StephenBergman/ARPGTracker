@@ -7,10 +7,13 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run src && node --test scripts/season-source-parser.test.mjs",
+    "test": "vitest run src && node --test scripts/*.test.mjs",
     "seasons:check": "node scripts/check-season-sources.mjs",
+    "seasons:update": "node scripts/check-season-sources.mjs --write",
     "preview": "vite preview",
     "tauri": "tauri",
+    "reviewer:dev": "tauri dev --features personal-reviewer --config src-tauri/tauri.reviewer.conf.json",
+    "reviewer:build": "tauri build --features personal-reviewer --config src-tauri/tauri.reviewer.conf.json",
     "release:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-windows-release.ps1"
   },
   "dependencies": {

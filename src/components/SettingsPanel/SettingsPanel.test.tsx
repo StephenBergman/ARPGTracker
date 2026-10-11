@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { SettingsPanel } from "./SettingsPanel";
 
 describe("SettingsPanel", () => {
-  const appUpdater = { currentVersion: "1.1.0", availableVersion: null, releaseNotes: null, progress: null, status: "current" as const, checkForUpdate: vi.fn(), installUpdate: vi.fn() };
+  const appUpdater = { enabled: true, currentVersion: "1.1.0", availableVersion: null, releaseNotes: null, progress: null, status: "current" as const, checkForUpdate: vi.fn(), installUpdate: vi.fn() };
   const renderSettings = (overrides: Partial<Parameters<typeof SettingsPanel>[0]> = {}) => {
     const noop = vi.fn();
     return renderToStaticMarkup(<SettingsPanel displayMode="expanded" alwaysOnTop={false} widgetMode positionLocked={false} widgetPlacement="free" launchAtStartup={false} startupSyncStatus="ready" showSeconds showSeasonProgress lastUpdated="2026-09-28T12:00:00Z" isRefreshing={false} appUpdater={appUpdater} onDisplayMode={noop} onAlwaysOnTop={noop} onWidgetMode={noop} onPositionLocked={noop} onWidgetPlacement={noop} onLaunchAtStartup={noop} onShowSeconds={noop} onShowSeasonProgress={noop} onRefresh={noop} onClose={noop} {...overrides} />);
@@ -37,6 +37,12 @@ describe("SettingsPanel", () => {
     expect(markup).toContain("Version 1.2.0 is available");
     expect(markup).toContain("Accessibility improvements");
     expect(markup).toContain("Update and restart");
+    expect(markup).toContain("Refresh season data");
+  });
+  it("prevents a public application update from replacing the personal reviewer", () => {
+    const markup = renderSettings({ appUpdater: { ...appUpdater, enabled: false, status: "available" } });
+    expect(markup).toContain("Personal reviewer builds are updated manually");
+    expect(markup).not.toContain("Update and restart");
     expect(markup).toContain("Refresh season data");
   });
 });
