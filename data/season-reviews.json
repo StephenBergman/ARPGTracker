@@ -1,18 +1,20 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-11T16:59:05.104Z",
+  "updatedAt": "2026-10-11T17:16:59.552Z",
   "reviews": [
     {
       "id": "e0a0fb278bd76c072ff70e340019cc413197d4196d10e7213f85075fea480efc",
       "gameId": "poe",
       "headline": "What Happens When The Mirage League Ends",
       "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1837955055364754",
-      "evidence": "[p]The Mirage Challenge League will end soon and you may be wondering what will happen when it does.[/p][p][/p][p]The Mirage system will not be going core in 3.29, so here’s what you can expect when the league ends on July 20th 3PM PDT. [/p][list][*][p]Core Atlas Content introduced in Mirage League such as Astrolabes and Exceptional Support gems still remain.[/p][/*][*][p]Transfusion Support however, will not be obtainable from Divination Cards.[/p][/*][*][p]Maps with Empowered Mirages that cover the entire Map will not be openable in Standard.[/p][/*][*][p]Existing Black Baryas will be usable, but there will be no way to obtain more of them.[/p][/*][/list][p][/p][p]Thanks to everyone for",
+      "evidence": "",
       "evidenceHash": "fbf9a39068c298ddc0439eb9774fb2ef352f7835ff2d47e353592737b381cfed",
       "reason": "No unambiguous season title",
       "discoveredAt": "2026-10-11T16:37:13.057Z",
       "baseline": "3d9d09b8e1a4930bf26682bced629dfa0f601458ed698dd47f8a260d996a1b17",
-      "status": "pending"
+      "status": "denied",
+      "decidedAt": "2026-10-11T17:16:59.552Z",
+      "decidedBy": "StephenBergman"
     },
     {
       "id": "29dddf2dafe201e82e9d9566de94bfd168363ea6426fb64dfd8b6fef9156a931",
