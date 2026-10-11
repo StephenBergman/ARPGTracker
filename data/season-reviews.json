@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-11T17:20:07.499Z",
+  "updatedAt": "2026-10-11T17:21:30.824Z",
   "reviews": [
     {
       "id": "e0a0fb278bd76c072ff70e340019cc413197d4196d10e7213f85075fea480efc",
@@ -64,13 +64,15 @@
       "gameId": "lastEpoch",
       "headline": "Free Cosmetic for Season 5: Cape of Penance",
       "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1844751498234008",
-      "evidence": "[p]Season 5: Rage of the Frostborn launches on October 1st. To mark the occasion, we’re giving every player a free cosmetic for all: the Cape of Penance.[/p][p][img src=\"{STEAM_CLAN_IMAGE}/34872446/3c5784338247e2bfb6c38d5858f7ffd595f63f0e.gif\"][/img][/p][p][i]Not every mistake can be erased from the timeline. Some must be owned. Bear this crimson reminder that even when meaning is lost, style endures.[/i] [/p][p][/p][p]The text on the cape is Korean for “Beauty Product” which comes from a mistranslation in the game that was one of many fixes with Season 5 thanks to help from the incredible LE Korean community. [/p][p]The Cape of Penance is a way for us to enjoy our",
+      "evidence": "",
       "evidenceHash": "cc8e202b84a7537c0da184964a97f32a66888c615e0ce539cb9a6cd8855bf0df",
       "reason": "Launch time is missing, ambiguous, or has an unclear year/timezone",
       "discoveredAt": "2026-10-11T16:37:13.057Z",
       "baseline": "f7853e9565100c57589aaa79eb1cd84ab0d0a11652626bece76af7a73bf2251c",
-      "status": "pending",
-      "suggestedTitle": "Season 5: Rage of the Frostborn"
+      "status": "denied",
+      "suggestedTitle": "Season 5: Rage of the Frostborn",
+      "decidedAt": "2026-10-11T17:21:30.824Z",
+      "decidedBy": "StephenBergman"
     },
     {
       "id": "aefc4f3bd8d372694555299429d66a186b9602837dbee16d5bf0ed6e551e24a4",
