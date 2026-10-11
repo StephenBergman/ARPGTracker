@@ -38,8 +38,20 @@ for (const [gameId, body, expected] of [
 test("handles publication-year inference across New Year", () => {
   assert.equal(parseLaunchDate("January 5 at 19:00 UTC", "2026-12-20T00:00:00Z", new Date("2026-12-21T00:00:00Z")), "2027-01-05T19:00:00Z");
 });
-test("never guesses missing homepage years, times, or timezones", () => {
-  for (const text of ["October 15 at 7 PM PDT", "October 15, 2026", "October 15, 2026 at 7 PM", "October 15, 2026 at 7 PT"]) {
+test("uses the nearest year for undated announcements across year boundaries", () => {
+  assert.equal(parseLaunchDate("October 15 at 7 PM PDT", "", now), "2026-10-16T02:00:00Z");
+  assert.equal(parseLaunchDate("January 5 at 19:00 UTC", "", new Date("2026-12-21T00:00:00Z")), "2027-01-05T19:00:00Z");
+  assert.equal(parseLaunchDate("December 28 at 19:00 UTC", "", new Date("2027-01-02T00:00:00Z")), "2026-12-28T19:00:00Z");
+});
+test("extracts Tartarus from an undated homepage without using the preview date", () => {
+  const result = extractSeasonUpdate("torchlightInfinite", {
+    ...article('<div>Season preview starts Oct 16, 10 AM PDT</div><div>New Seasonal Mechanic: Tartarus</div><div>SEASON LAUNCH: Oct 15, 7 PM PDT</div>'), published: "",
+  }, now);
+  assert.equal(result.update?.title, "Tartarus", result.reason);
+  assert.equal(result.update?.startDate, "2026-10-16T02:00:00Z");
+});
+test("never guesses missing times or timezones", () => {
+  for (const text of ["October 15, 2026", "October 15, 2026 at 7 PM", "October 15, 2026 at 7 PT"]) {
     assert.equal(parseLaunchDate(text, "", now), null);
   }
 });

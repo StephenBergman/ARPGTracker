@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-11T16:37:13.057Z",
+  "updatedAt": "2026-10-11T16:59:05.104Z",
   "reviews": [
     {
       "id": "e0a0fb278bd76c072ff70e340019cc413197d4196d10e7213f85075fea480efc",
@@ -87,7 +87,7 @@
       "reason": "Launch time is missing, ambiguous, or has an unclear year/timezone",
       "discoveredAt": "2026-10-11T16:37:13.057Z",
       "baseline": "17ff82437ca36bd283642d6f3cb0bd453ae6cf81e876131c03454ab5d07f81f2",
-      "status": "pending",
+      "status": "superseded",
       "suggestedTitle": "Tartarus"
     }
   ]

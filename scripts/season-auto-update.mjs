@@ -14,8 +14,8 @@ export function announcementLines(body) {
     .replace(/\[[^\]\n]+\]/g, " ").split(/\n+/).map(plainText).filter(Boolean);
 }
 
-// Only precise times are eligible. A missing year can be anchored to a dated
-// announcement within 180 days; undated homepages never supply that anchor.
+// Only precise times are eligible. Missing years use the nearest occurrence to
+// the publication date, or the scan date when the announcement is undated.
 export function parseLaunchDate(text, published, now = new Date()) {
   const results = [];
   for (const match of text.matchAll(datePattern)) {
@@ -28,15 +28,16 @@ export function parseLaunchDate(text, published, now = new Date()) {
       hour = hour % 12 + (/^p/i.test(meridiem) ? 12 : 0);
     } else if (!minuteText) return null;
     if (hour > 23 || minute > 59 || day < 1 || day > 31) return null;
-    const anchor = Date.parse(published);
-    if (!yearText && !Number.isFinite(anchor)) return null;
+    const publicationDate = Date.parse(published);
+    const anchor = Number.isFinite(publicationDate) ? publicationDate : now.getTime();
+    if (!Number.isFinite(anchor)) return null;
     const years = yearText ? [Number(yearText)] : [-1, 0, 1].map((delta) => new Date(anchor).getUTCFullYear() + delta);
     const candidates = years.map((year) => {
       const local = new Date(Date.UTC(year, month, day, hour, minute));
       if (local.getUTCMonth() !== month || local.getUTCDate() !== day) return NaN;
       return local.getTime() - offsets[zone.toUpperCase()] * 3_600_000;
-    }).filter(Number.isFinite).filter((date) => yearText || Math.abs(date - anchor) < 180 * DAY);
-    if (candidates.length !== 1) return null;
+    }).filter(Number.isFinite).sort((a, b) => Math.abs(a - anchor) - Math.abs(b - anchor));
+    if (!candidates.length || (!yearText && candidates.length > 1 && Math.abs(candidates[0] - anchor) === Math.abs(candidates[1] - anchor))) return null;
     const date = candidates[0];
     if (date < now.getTime() - 180 * DAY || date > now.getTime() + 365 * DAY) return null;
     const zoneName = zoneNames[zone.toUpperCase()];
