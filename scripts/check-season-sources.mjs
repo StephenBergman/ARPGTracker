@@ -9,7 +9,7 @@ const sources = [
   { games: ["diablo2Resurrected"], name: "Diablo II: Resurrected news", url: "https://news.blizzard.com/en-us/diablo2" },
   { games: ["lastEpoch"], name: "Last Epoch patch notes", url: "https://lastepoch.com/patchnotes/" },
   { games: ["projectDiablo2"], name: "Project Diablo 2", url: "https://www.projectdiablo2.com/" },
-  { games: ["torchlightInfinite"], name: "Torchlight: Infinite Steam news", url: "https://api.steampowered.com/ISteamNews/GetNewsForApp/v2/?appid=1974050&count=20&maxlength=1200&format=json" },
+  { games: ["torchlightInfinite"], name: "Torchlight: Infinite official website", url: "https://torchlight.xd.com/" },
 ];
 
 
@@ -21,10 +21,6 @@ function candidatesFromXml(body) {
   }));
 }
 
-function candidatesFromSteam(body) {
-  const parsed = JSON.parse(body);
-  return (parsed.appnews?.newsitems ?? []).map((item) => ({ title: item.title, link: item.url, published: new Date(item.date * 1000).toISOString() }));
-}
 
 
 const alerts = [];
@@ -34,7 +30,7 @@ for (const source of sources) {
     const response = await fetch(source.url, { headers: { "user-agent": "ARPGTracker season monitor/1.0" }, signal: AbortSignal.timeout(20_000) });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const body = await response.text();
-    const items = source.url.includes("api.steampowered.com") ? candidatesFromSteam(body) : body.includes("<item") ? candidatesFromXml(body) : candidatesFromHtml(body, source.url);
+    const items = body.includes("<item") ? candidatesFromXml(body) : candidatesFromHtml(body, source.url);
     const relevant = findRelevantCandidates(items, source.games.map((id) => dataset.games[id]));
     if (relevant.length) alerts.push({ source, relevant });
   } catch (error) { failures.push(`${source.name}: ${error instanceof Error ? error.message : String(error)}`); }

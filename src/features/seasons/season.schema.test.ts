@@ -36,7 +36,7 @@ describe("validateSeasonDataset", () => {
     expect(season.currentSeason.title).toBe("Afterlight");
     expect(season.currentSeason.startDate).toBe("2026-07-17T02:00:00Z");
     expect(season.nextSeason.status).toBe("unknown");
-    expect(season.source).toContain("steamcommunity.com");
+    expect(season.source).toBe("https://torchlight.xd.com/");
   });
 
   it("uses the official Path of Exile league instead of placeholder data", () => {
