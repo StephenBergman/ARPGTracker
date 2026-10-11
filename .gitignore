@@ -43,3 +43,6 @@ ARPG-Seasons-*.exe.sig
 # Personal reviewer installers, including renamed local copies
 *Reviewer*.exe
 *Reviewer*.exe.sig
+
+# Locally generated installation packages
+/local-packages/

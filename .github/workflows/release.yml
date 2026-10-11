@@ -32,7 +32,15 @@ jobs:
         with:
           tagName: v__VERSION__
           releaseName: ARPG Seasons v__VERSION__
-          releaseBody: Download the Windows installer below. Existing updater-enabled installations will be offered this release automatically.
+          releaseBody: |
+            ## Install on Windows
+            Download the Windows x64 setup.exe file from Assets below, run it, and open ARPG Seasons from the Start menu. No developer tools are required. Setup installs for your Windows account without administrator access; internet may be needed to install WebView2.
+
+            You do not need the Source code archives, .sig files, or latest.json. Closing the app hides it to the system tray; choose Exit from the tray to quit.
+
+            [Installation and usage guide](https://github.com/StephenBergman/ARPGTracker#install-on-windows)
+
+            Existing updater-enabled installations can choose Update and restart in Settings. Season data updates separately and does not require reinstalling.
           releaseDraft: false
           prerelease: false
           uploadUpdaterJson: true

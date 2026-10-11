@@ -14,7 +14,8 @@
     "tauri": "tauri",
     "reviewer:dev": "tauri dev --features personal-reviewer --config src-tauri/tauri.reviewer.conf.json",
     "reviewer:build": "tauri build --features personal-reviewer --config src-tauri/tauri.reviewer.conf.json",
-    "release:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-windows-release.ps1"
+    "release:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-windows-release.ps1",
+    "package:windows": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build-local-package.ps1"
   },
   "dependencies": {
     "@tauri-apps/api": "^2",
