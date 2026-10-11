@@ -41,7 +41,7 @@ export function App() {
   return (
     <WidgetShell theme={GAME_THEMES[selectedGameId]} displayMode={displayMode} alwaysOnTop={alwaysOnTop} widgetMode={widgetMode} positionLocked={positionLocked} widgetPlacement={widgetPlacement} onToggleDisplayMode={toggleDisplayMode} onToggleAlwaysOnTop={() => setAlwaysOnTop((value) => !value)} onTogglePositionLock={() => setPositionLocked((value) => !value)} onOpenSettings={openSettings}>
       <div className={styles.body} inert={reviewsOpen}>
-      {reviewer.enabled && <button className={styles.reviews} data-window-drag="disabled" onClick={openReviews} type="button">Personal reviews{reviewer.pending.length ? ` ? ${reviewer.pending.length} pending` : ""}</button>}
+      {reviewer.enabled && <button aria-label={`Personal reviews, ${reviewer.pending.length} pending`} className={styles.reviews} data-window-drag="disabled" onClick={openReviews} type="button"><span>Season reviews</span>{reviewer.pending.length > 0 && <span className={styles.reviewCount}>{reviewer.pending.length}</span>}</button>}
       {displayMode === "compact" ? <CompactWidget season={selectedSeason} shortName={gameDefinition.shortName} checkingForUpdate={isRefreshing} onElapsed={() => { void refresh(); }} /> : <><GameSelector games={GAME_DEFINITIONS} selectedGameId={selectedGameId} onSelect={setSelectedGameId} layout={widgetLayout} />
       <div className={styles.workspace} data-standard={!widgetMode}>
       <main className={styles.content} data-layout={widgetLayout}>

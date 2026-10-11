@@ -32,7 +32,7 @@ describe("personal season reviews", () => {
     expect(html).toContain("Unknown — title only");
     expect(html).toContain("Approve &amp; publish");
     expect(html).toContain("Deny");
-    expect(html).toContain("&lt;script&gt;");
+    expect(html).not.toContain("&lt;script&gt;");
     expect(html).not.toContain("<script>");
   });
 });

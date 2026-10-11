@@ -4,6 +4,7 @@ import type { SeasonReview, SeasonReviewDecision } from "../../features/seasons/
 import type { GameSeasonData, SeasonDateStatus } from "../../features/seasons/season.types";
 import type { useSeasonReviewer } from "../../hooks/useSeasonReviewer";
 import styles from "./SeasonReviewPanel.module.css";
+import { formatReviewExcerpt } from "../../features/seasons/season-review-text";
 
 type Reviewer = ReturnType<typeof useSeasonReviewer>;
 const actionsUrl = "https://github.com/StephenBergman/ARPGTracker/actions/workflows/season-review.yml";
@@ -23,7 +24,7 @@ function ReviewForm({ review, game, busy, onSubmit, onOpenSource }: { review: Se
     <p className={styles.eyebrow}>{game.gameName}</p><h3>{review.headline}</h3>
     <p className={styles.reason}>{review.reason}</p>
     <button className={styles.link} onClick={() => onOpenSource(review.source)} type="button">Read official announcement ↗</button>
-    <details><summary>Announcement excerpt</summary><p className={styles.evidence}>{review.evidence || "Open the official source to review this announcement."}</p></details>
+    <details><summary>Announcement excerpt</summary><p className={styles.evidence}>{formatReviewExcerpt(review.evidence) || "Open the official source to review this announcement."}</p></details>
     <div className={styles.published}><span>Currently published</span><strong>{game.currentSeason.title}</strong><small>Started {game.currentSeason.startDate}</small><small>Next: {game.nextSeason.title ?? "Unannounced"}{game.nextSeason.startDate ? ` · ${game.nextSeason.startDate} (${game.nextSeason.status})` : ""}</small></div>
     <fieldset disabled={busy}>
       <legend>Publish these details</legend>
