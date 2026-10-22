@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-11T17:22:14.180Z",
+  "updatedAt": "2026-10-22T11:48:58.408Z",
   "reviews": [
     {
       "id": "e0a0fb278bd76c072ff70e340019cc413197d4196d10e7213f85075fea480efc",
@@ -100,6 +100,19 @@
       "discoveredAt": "2026-10-11T16:37:13.057Z",
       "baseline": "17ff82437ca36bd283642d6f3cb0bd453ae6cf81e876131c03454ab5d07f81f2",
       "status": "superseded",
+      "suggestedTitle": "Tartarus"
+    },
+    {
+      "id": "d014b27b3bfeedaf4210e64e694342cc6d03c631a48a1c8e08bac731af939273",
+      "gameId": "torchlightInfinite",
+      "headline": "Season Rewards",
+      "source": "https://torchlight.xd.com/",
+      "evidence": "Torchlight: Infinite - The \"Tartarus\" Season is available! English 繁體中文 English 한국어 Download Now MORE Download Now MORE Scroll to explore New Hero Trait: Youga - The Ultimate One Wield the Clockwork Core and hunt down your parallel selves. PART.02 PART.02 New Hero Trait: Youga - The Ultimate One Wield the Clockwork Core and hunt down your parallel selves. PART.03 New Seasonal Mechanic: Tartarus Capture Caged Beasts on the board in the Netherrealm. Crush the prison Riot for rich rewards. PART.04 Season Rewards Log in to claim a Legendary Drop Pactspirit Selection Pack! PART.05 Hero Model Revamps Three familiar faces—Gemma",
+      "evidenceHash": "e9cecf3c750af4d9f4e9be2dce502a8dbe003834614c3f068c5eeec25f8c5cd8",
+      "reason": "Launch time is missing, ambiguous, or has an unclear year/timezone",
+      "discoveredAt": "2026-10-22T11:48:58.408Z",
+      "baseline": "1450352e7b506d27d34c0c8856f124f12b1d072df2a215f047a319ec7037110f",
+      "status": "pending",
       "suggestedTitle": "Tartarus"
     }
   ]
