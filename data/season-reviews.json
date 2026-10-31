@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-26T22:38:28.938Z",
+  "updatedAt": "2026-10-31T05:37:33.139Z",
   "reviews": [
     {
       "id": "e0a0fb278bd76c072ff70e340019cc413197d4196d10e7213f85075fea480efc",
@@ -137,6 +137,19 @@
       "reason": "Launch time is missing, ambiguous, or has an unclear year/timezone",
       "discoveredAt": "2026-10-26T22:38:28.938Z",
       "baseline": "22ec4236d605845e1d4b4af3832aab4d6ad67c7127c089e1a76d15a9868fffb6",
+      "status": "superseded",
+      "suggestedTitle": "Ladder Season 14"
+    },
+    {
+      "id": "bccbcd14d0a4141eaec439a188cc3a0d165f12a627aa771d1fe3893335218a5d",
+      "gameId": "diablo2Resurrected",
+      "headline": "Diablo II: Resurrected Ladder Season 14 Has Concluded",
+      "source": "https://news.blizzard.com/en-us/article/24261478/diablo-ii-resurrected-ladder-season-14-has-concluded",
+      "evidence": "Diablo II: Resurrected Ladder Season 14 Has Concluded — Diablo II: Resurrected — Blizzard News Blizzard News Diablo II: Resurrected Diablo II: Resurrected Ladder Season 14 Has Concluded Diablo II: Resurrected Ladder Season 14 Has Concluded Blizzard Entertainment 144 Comments Strike fear into demonkind when you enter their midst, traveler. The annals mark the reign of the Warlock, push further into the fray when Ladder Season 14 arrives on May 22 . Read on to discover many changes made following the 3.2 PTR, including vast changes to the Warlock, Terror Zone changes, and more. Codex Ladder Season 14 Patch 3.2",
+      "evidenceHash": "43fa5e891dd28a872e34e4ed950d6de263d68b0c7d8b13375592087974b8214e",
+      "reason": "Launch time is missing, ambiguous, or has an unclear year/timezone",
+      "discoveredAt": "2026-10-31T05:37:33.139Z",
+      "baseline": "e5324e973091aa6bd705fa94a96f421d12ce0b6295682df80995a15d8b006b8d",
       "status": "pending",
       "suggestedTitle": "Ladder Season 14"
     }

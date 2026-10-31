@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-11T16:59:05.104Z",
+  "updatedAt": "2026-10-31T05:37:33.139Z",
   "games": {
     "poe": {
       "gameId": "poe",
@@ -80,12 +80,12 @@
         "endDate": null
       },
       "nextSeason": {
-        "title": null,
-        "startDate": null,
-        "status": "unknown"
+        "title": "Ladder Season 16",
+        "startDate": "2026-11-14T01:00:00Z",
+        "status": "confirmed"
       },
-      "source": "https://news.blizzard.com/en-us/article/24296140/diablo-ii-resurrected-ladder-season-15-now-live",
-      "lastUpdated": "2026-09-28T20:40:00Z"
+      "source": "https://news.blizzard.com/en-us/article/24316567/diablo-ii-resurrected-ladder-season-16",
+      "lastUpdated": "2026-10-31T05:37:33.139Z"
     },
     "projectDiablo2": {
       "gameId": "projectDiablo2",
