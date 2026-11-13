@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-31T05:37:33.139Z",
+  "updatedAt": "2026-11-11T19:21:12.180Z",
   "games": {
     "poe": {
       "gameId": "poe",
@@ -12,12 +12,12 @@
         "endDate": null
       },
       "nextSeason": {
-        "title": null,
-        "startDate": null,
-        "status": "unknown"
+        "title": "Covens of Umbra",
+        "startDate": "2026-11-13T21:00:00Z",
+        "status": "estimated"
       },
-      "source": "https://www.pathofexile.com/allflame",
-      "lastUpdated": "2026-09-28T20:20:00Z"
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1848664643347678",
+      "lastUpdated": "2026-11-11T19:21:12.180Z"
     },
     "poe2": {
       "gameId": "poe2",

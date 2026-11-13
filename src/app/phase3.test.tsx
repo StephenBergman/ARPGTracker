@@ -28,6 +28,6 @@ describe("Phase 3 season presentation", () => {
   it("distinguishes confirmed, estimated, and unknown next-season states", () => {
     expect(renderToStaticMarkup(<Countdown nextSeason={{ title: "Confirmed test", startDate: "2099-01-01T00:00:00Z", status: "confirmed" }} />)).toContain("Confirmed");
     expect(renderToStaticMarkup(<Countdown nextSeason={{ title: "Estimated test", startDate: "2099-01-01T00:00:00Z", status: "estimated" }} />)).toContain("Estimated");
-    expect(renderToStaticMarkup(<Countdown nextSeason={dataset.games.poe.nextSeason} />)).toContain("Next season has not been announced");
+    expect(renderToStaticMarkup(<Countdown nextSeason={{ title: null, startDate: null, status: "unknown" }} />)).toContain("Next season has not been announced");
   });
 });

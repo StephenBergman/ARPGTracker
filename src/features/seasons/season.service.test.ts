@@ -13,6 +13,24 @@ class MemoryCache implements SeasonCache {
 const source = (value: unknown, shouldThrow = false): SeasonRemoteSource => ({ fetch: async () => { if (shouldThrow) throw new Error("offline"); return value; } });
 
 describe("SeasonService", () => {
+  it("refreshes an unknown PoE season from the published estimated launch without reinstalling", async () => {
+    const old = structuredClone(bundled) as SeasonDataset;
+    old.updatedAt = "2026-10-31T05:37:33.139Z";
+    old.games.poe.nextSeason = { title: null, startDate: null, status: "unknown" };
+    const published = structuredClone(old);
+    published.updatedAt = "2026-11-11T19:00:00Z";
+    published.games.poe.lastUpdated = published.updatedAt;
+    published.games.poe.nextSeason = { title: "Covens of Umbra", startDate: "2026-11-13T21:00:00Z", status: "estimated" };
+    const cache = new MemoryCache(old);
+    const service = new SeasonService(cache, source(published), old);
+    const local = await service.loadLocal();
+    expect(local.data.games.poe.nextSeason.status).toBe("unknown");
+    const result = await service.refresh(local.data);
+    expect(result.origin).toBe("remote");
+    expect(result.data.games.poe.nextSeason).toEqual({ title: "Covens of Umbra", startDate: "2026-11-13T21:00:00Z", status: "estimated" });
+    expect(cache.written?.games.poe.nextSeason).toEqual(result.data.games.poe.nextSeason);
+  });
+
   it("loads valid remote data first and caches it", async () => {
     const remoteData = structuredClone(bundled) as SeasonDataset;
     remoteData.updatedAt = "2026-09-29T12:00:00Z";

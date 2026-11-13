@@ -140,3 +140,72 @@ test("loads Blizzard articles only from the official origin", async () => {
   assert.equal(articles[0].body, null);
   assert.equal(articles[0].published, properties.lastUpdated);
 });
+
+// Regression: the monitor used to discard PoE headlines at its pre-filter,
+// then fail to extract the plural release verb or a date without a clock time.
+test("accepts actual PoE release headlines through the scan filter", async () => {
+  const { isSeasonAnnouncement } = await import("./season-source-parser.mjs");
+  for (const title of ["Path of Exile: Covens of Umbra Releases on November 13 PST!", "Play Path of Exile 1: Covens of Umbra on November 13 PST"]) {
+    assert.equal(isSeasonAnnouncement(title), true);
+    const result = extractSeasonUpdate("poe", { ...article("Our November expansion introduces a new challenge league."), title, published: "2026-11-06T23:00:24Z" }, new Date("2026-11-11T12:00:00Z"));
+    assert.equal(result.update?.title, "Covens of Umbra", result.reason);
+    assert.equal(result.update?.startDate, "2026-11-13T21:00:00Z");
+    assert.equal(result.update?.status, "estimated");
+  }
+});
+
+test("PoE fallback uses Eastern daylight saving on the launch day and handles New Year", () => {
+  for (const [date, published, scan, expected] of [
+    ["July 24 PDT", "2026-07-01T00:00:00Z", "2026-07-10T00:00:00Z", "2026-07-24T20:00:00Z"],
+    ["November 13 PST", "2026-10-30T00:00:00Z", "2026-10-31T00:00:00Z", "2026-11-13T21:00:00Z"],
+    ["January 5 PST", "2026-12-20T00:00:00Z", "2026-12-21T00:00:00Z", "2027-01-05T21:00:00Z"],
+  ]) {
+    const result = extractSeasonUpdate("poe", { ...article(""), title: `Path of Exile 1: New Embers Releases on ${date}!`, published }, new Date(scan));
+    assert.equal(result.update?.startDate, expected, result.reason);
+  }
+});
+
+test("date-only policy is restricted to PoE 1 launch headlines and valid upcoming dates", () => {
+  const scan = new Date("2026-11-11T12:00:00Z");
+  for (const [gameId, title] of [
+    ["poe2", "Path of Exile 2: New Depths Releases on November 13 PST!"],
+    ["poe", "Path of Exile 2: New Depths Releases on November 13 PST!"],
+    ["poe", "Path of Exile: New Embers Preview on November 13 PST!"],
+    ["poe", "Path of Exile: New Embers Releases on February 30, 2027 PST!"],
+    ["poe", "Path of Exile: New Embers Releases on November 10, 2026 PST!"],
+    ["poe", "Path of Exile: New Embers Releases on November 13!"],
+    ["poe", "Path of Exile: New Embers Releases on November 13 at 7 PM!"],
+    ["poe", "Path of Exile: New Embers Releases on November 13 PST and November 14 PST!"],
+  ]) assert.equal(extractSeasonUpdate(gameId, { ...article(""), title }, scan).update, undefined, title);
+});
+
+test("explicit PoE launch time supersedes the inferred time without publishing churn", () => {
+  const scan = new Date("2026-11-11T12:00:00Z");
+  const inferred = { title: "Covens of Umbra", startDate: "2026-11-13T21:00:00Z", status: "estimated", source: original.games.poe.source };
+  const input = structuredClone(original);
+  input.games.poe.nextSeason = { title: null, startDate: null, status: "unknown" };
+  const first = applySeasonUpdates(input, "poe", [inferred], scan);
+  assert.equal(first.changed.length, 1);
+  assert.equal(first.dataset.games.poe.nextSeason.status, "estimated");
+  assert.deepEqual(applySeasonUpdates(first.dataset, "poe", [inferred], scan).changed, []);
+  const explicit = { ...inferred, startDate: "2026-11-13T20:00:00Z", status: "confirmed" };
+  for (const updates of [[inferred, explicit], [explicit, inferred]]) {
+    const next = applySeasonUpdates(first.dataset, "poe", updates, scan);
+    assert.equal(next.dataset.games.poe.nextSeason.startDate, explicit.startDate);
+    assert.equal(next.dataset.games.poe.nextSeason.status, "confirmed");
+    assert.equal(validateSeasonDataset(next.dataset).success, true);
+  }
+  const late = applySeasonUpdates(first.dataset, "poe", [inferred], new Date("2026-11-14T00:00:00Z"));
+  assert.deepEqual(late.dataset, first.dataset);
+});
+
+test("uses explicit PoE 1 clock times and does not confuse a reveal time with launch", () => {
+  const scan = new Date("2026-11-11T12:00:00Z");
+  const title = "Path of Exile 1: Covens of Umbra Releases on November 13 PST!";
+  const explicit = extractSeasonUpdate("poe", { ...article("Path of Exile 1: Covens of Umbra launches on November 13, 2026 at 12 PM PST."), title }, scan);
+  assert.equal(explicit.update?.startDate, "2026-11-13T20:00:00Z");
+  assert.notEqual(explicit.update?.status, "estimated");
+  const reveal = extractSeasonUpdate("poe", { ...article("Tune in to the broadcast on November 6 at 12:30 PM PST."), title }, scan);
+  assert.equal(reveal.update?.startDate, "2026-11-13T21:00:00Z");
+  assert.equal(reveal.update?.status, "estimated");
+});

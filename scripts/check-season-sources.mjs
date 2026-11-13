@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
-import { candidatesFromHtml, plainText } from "./season-source-parser.mjs";
+import { candidatesFromHtml, plainText, isSeasonAnnouncement } from "./season-source-parser.mjs";
 import { sources, loadAnnouncements, fetchText } from "./season-sources.mjs";
 import { extractSeasonUpdate, applySeasonUpdates } from "./season-auto-update.mjs";
 import { validateSeasonDataset } from "../src/features/seasons/season.schema.ts";
@@ -24,7 +24,7 @@ for (const source of sources) {
     const game = dataset.games[source.gameId];
     const candidates = [];
     for (const article of articles) {
-      if (source.kind !== "homepage" && !/\b(season|league|ladder|cycle|Path of Exile(?: 2)?:)\b/i.test(article.title)) continue;
+      if (source.kind !== "homepage" && !isSeasonAnnouncement(article.title)) continue;
       const published = Date.parse(article.published);
       if (Number.isFinite(published) && published < now.getTime() - 180 * 86_400_000) continue;
       try {
