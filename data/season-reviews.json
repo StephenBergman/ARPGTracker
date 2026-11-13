@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-31T05:37:33.139Z",
+  "updatedAt": "2026-11-13T19:39:35.215Z",
   "reviews": [
     {
       "id": "e0a0fb278bd76c072ff70e340019cc413197d4196d10e7213f85075fea480efc",
@@ -152,6 +152,19 @@
       "baseline": "e5324e973091aa6bd705fa94a96f421d12ce0b6295682df80995a15d8b006b8d",
       "status": "pending",
       "suggestedTitle": "Ladder Season 14"
+    },
+    {
+      "id": "f010a46d7faf0f60f5f5830471be19bbb0327bc90507fe900027c8b39b359171",
+      "gameId": "lastEpoch",
+      "headline": "Coming in early February: Mid-Season Refresh",
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1849192144188190",
+      "evidence": "[p]Hello Travelers,[/p][p]We are excited to share some news about what’s next for Season 5: Rage of the Frostborn. We are launching a Mid-Season Refresh in early February that includes a limited-time event, a numerical balance pass, and a ladder reset! If you haven’t heard: Mike, our Game Director, has made one thing clear : we want you to hear about what’s coming from us, and we want to share things earlier than we have before. With that said, let’s get into some details about what’s included in the Mid-Season Refresh coming in early February. [/p][p][/p][h2][b]What’s in the Mid-Season Refresh?[/b] [/h2][h3][b]Weaver’s",
+      "evidenceHash": "a3ae877931693ce8cfb04e84dacb700ce9bcdc3e529da5faee8758d1fb56bbc3",
+      "reason": "Launch time is missing, ambiguous, or has an unclear year/timezone",
+      "discoveredAt": "2026-11-13T19:39:35.215Z",
+      "baseline": "f7853e9565100c57589aaa79eb1cd84ab0d0a11652626bece76af7a73bf2251c",
+      "status": "pending",
+      "suggestedTitle": "Season 5: Rage of the Frostborn"
     }
   ]
 }
