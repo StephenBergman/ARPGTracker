@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-11T19:21:12.180Z",
+  "updatedAt": "2026-11-14T06:18:05.228Z",
   "games": {
     "poe": {
       "gameId": "poe",
@@ -74,18 +74,18 @@
       "gameId": "diablo2Resurrected",
       "gameName": "Diablo II: Resurrected",
       "currentSeason": {
-        "id": "d2r-ladder-season-15",
-        "title": "Ladder Season 15",
-        "startDate": "2026-08-22T00:00:00Z",
+        "id": "diablo2Resurrected-2026-11-14-ladder-season-16",
+        "title": "Ladder Season 16",
+        "startDate": "2026-11-14T01:00:00Z",
         "endDate": null
       },
       "nextSeason": {
-        "title": "Ladder Season 16",
-        "startDate": "2026-11-14T01:00:00Z",
-        "status": "confirmed"
+        "title": null,
+        "startDate": null,
+        "status": "unknown"
       },
       "source": "https://news.blizzard.com/en-us/article/24316567/diablo-ii-resurrected-ladder-season-16",
-      "lastUpdated": "2026-10-31T05:37:33.139Z"
+      "lastUpdated": "2026-11-14T06:18:05.228Z"
     },
     "projectDiablo2": {
       "gameId": "projectDiablo2",

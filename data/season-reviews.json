@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-13T19:39:35.215Z",
+  "updatedAt": "2026-11-14T06:18:05.228Z",
   "reviews": [
     {
       "id": "e0a0fb278bd76c072ff70e340019cc413197d4196d10e7213f85075fea480efc",
@@ -150,7 +150,7 @@
       "reason": "Launch time is missing, ambiguous, or has an unclear year/timezone",
       "discoveredAt": "2026-10-31T05:37:33.139Z",
       "baseline": "e5324e973091aa6bd705fa94a96f421d12ce0b6295682df80995a15d8b006b8d",
-      "status": "pending",
+      "status": "superseded",
       "suggestedTitle": "Ladder Season 14"
     },
     {
@@ -165,6 +165,19 @@
       "baseline": "f7853e9565100c57589aaa79eb1cd84ab0d0a11652626bece76af7a73bf2251c",
       "status": "pending",
       "suggestedTitle": "Season 5: Rage of the Frostborn"
+    },
+    {
+      "id": "10a5a052918bb96dce25704e1e13579621e228909c645df1d80530cf229cbf5e",
+      "gameId": "poe",
+      "headline": "Path of Exile 1: New Uniques",
+      "source": "https://steamstore-a.akamaihd.net/news/externalpost/steam_community_announcements/1838407329264321",
+      "evidence": "[p]Check out some of the new Unique Items you can discover while exploring Wraeclast in Path of Exile 1: Curse of the Allflame. From consuming Abyssal Jewels to commanding an army of spellcasting crabs, these Uniques offer entirely new ways to build your character… or make a striking impression on your fellow seafarers.[/p][p][/p][p]Check out the Unique video highlights below, or the announcement page [url=\"https://www.pathofexile.com/allflame\"]here[/url].[/p][p][/p][previewyoutube=\"BqAjR3CL4zI;full\"][/previewyoutube][p][/p]",
+      "evidenceHash": "6dab1630b467d45824d2afdfa424a359587ca3cde4c4b47ed8780e5f354655b7",
+      "reason": "Launch time is missing, ambiguous, or has an unclear year/timezone",
+      "discoveredAt": "2026-11-14T06:18:05.228Z",
+      "baseline": "12a294cf701239befab819267d92e4b8cdf7abf6ae6ac5b31dfd3917026706ce",
+      "status": "pending",
+      "suggestedTitle": "New Uniques"
     }
   ]
 }
