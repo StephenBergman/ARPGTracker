@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-14T06:18:05.228Z",
+  "updatedAt": "2026-11-14T17:58:37.882Z",
   "reviews": [
     {
       "id": "e0a0fb278bd76c072ff70e340019cc413197d4196d10e7213f85075fea480efc",
@@ -178,6 +178,19 @@
       "baseline": "12a294cf701239befab819267d92e4b8cdf7abf6ae6ac5b31dfd3917026706ce",
       "status": "pending",
       "suggestedTitle": "New Uniques"
+    },
+    {
+      "id": "5a70b396eea265bcc1e2c89dab741bfaf80705e51d978389f2b52f2e7be35ebc",
+      "gameId": "diablo2Resurrected",
+      "headline": "Diablo II: Resurrected Ladder Season 15 Has Concluded",
+      "source": "https://news.blizzard.com/en-us/article/24296140/diablo-ii-resurrected-ladder-season-15-has-concluded",
+      "evidence": "Diablo II: Resurrected Ladder Season 15 Has Concluded — Diablo II: Resurrected — Blizzard News Blizzard News Diablo II: Resurrected Diablo II: Resurrected Ladder Season 15 Has Concluded Diablo II: Resurrected Ladder Season 15 Has Concluded Blizzard Entertainment 125 Comments Hell’s legions beckon you forth, eager for the challenge you surely provide, traveler. Fight through the fray when Ladder Season 15 arrives on August 21 . Read on to discover new items added to Ladder, changes to Terror Zones, and a slew of bug fixes. Codex Ladder Season 15 Patch 3.3 Notes Ladder Season 15 Ladder Season 15 Timing: Our",
+      "evidenceHash": "8e3858a67b4211e9180ea01c0a75da271da701d4940e6df892f94f1f3b301a24",
+      "reason": "Launch time is missing, ambiguous, or has an unclear year/timezone",
+      "discoveredAt": "2026-11-14T17:58:37.882Z",
+      "baseline": "1e00cd56445bbab535ff173756891887d5841d6d98813fc802408388df227571",
+      "status": "pending",
+      "suggestedTitle": "Ladder Season 15"
     }
   ]
 }
