@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-14T17:58:37.882Z",
+  "updatedAt": "2026-11-24T22:24:18.667Z",
   "reviews": [
     {
       "id": "e0a0fb278bd76c072ff70e340019cc413197d4196d10e7213f85075fea480efc",
@@ -191,6 +191,18 @@
       "baseline": "1e00cd56445bbab535ff173756891887d5841d6d98813fc802408388df227571",
       "status": "pending",
       "suggestedTitle": "Ladder Season 15"
+    },
+    {
+      "id": "4b829b3c347b4be63f791de5d98e6a81c5fd79b9a048d28ef2106187e3ad61ba",
+      "gameId": "diablo4",
+      "headline": "Advance the War Against Death in Season of Tyrael’s Gambit",
+      "source": "https://news.blizzard.com/en-us/article/24316979/advance-the-war-against-death-in-season-of-tyraels-gambit",
+      "evidence": "Advance the War Against Death in Season of Tyrael’s Gambit — Diablo IV — Blizzard News Blizzard News Diablo IV Advance the War Against Death in Season of Tyrael’s Gambit Advance the War Against Death in Season of Tyrael’s Gambit Blizzard Entertainment 2 Comments With the continuing threat posed by the Úllo Sar death cult, you’ll join Tyrael in a redoubled effort in the war to thwart their takeover of Sanctuary starting December 1, 2026 at 9:30 a.m. PT . Death’s influence is spreading beyond the Ruptures that continue to plague the land, and with your help, Tyrael must investigate",
+      "evidenceHash": "c6ea797a774bd8549e70736601aa8c6ed1765eb75e2674366737c034fa5cdc08",
+      "reason": "No unambiguous season title",
+      "discoveredAt": "2026-11-24T22:24:18.667Z",
+      "baseline": "00f81b3dc486f7316981772635456871399ff6afb1b5f4dfbe58ba9cdaa0e55d",
+      "status": "pending"
     }
   ]
 }
