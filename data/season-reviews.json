@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-25T08:28:44.346Z",
+  "updatedAt": "2026-11-25T21:39:20.848Z",
   "reviews": [
     {
       "id": "e0a0fb278bd76c072ff70e340019cc413197d4196d10e7213f85075fea480efc",
@@ -213,6 +213,18 @@
       "evidenceHash": "994e0075ef5808eb96bdc03eab18e068043afbb7974ea002d5de0873f3e1db86",
       "reason": "No unambiguous season title",
       "discoveredAt": "2026-11-25T08:28:44.346Z",
+      "baseline": "00f81b3dc486f7316981772635456871399ff6afb1b5f4dfbe58ba9cdaa0e55d",
+      "status": "superseded"
+    },
+    {
+      "id": "4bbaade30f2905172c4bd7df0f46728f13e6c8f57b5b1db71ae559a94a897424",
+      "gameId": "diablo4",
+      "headline": "Advance the War Against Death in Season of Tyrael’s Gambit",
+      "source": "https://news.blizzard.com/en-us/article/24316979/advance-the-war-against-death-in-season-of-tyraels-gambit",
+      "evidence": "Advance the War Against Death in Season of Tyrael’s Gambit — Diablo IV — Blizzard News Blizzard News Diablo IV Advance the War Against Death in Season of Tyrael’s Gambit Advance the War Against Death in Season of Tyrael’s Gambit Blizzard Entertainment 7 Comments With the continuing threat posed by the Úllo Sar death cult, you’ll join Tyrael in a redoubled effort in the war to thwart their takeover of Sanctuary starting December 1, 2026 at 9:30 a.m. PT . Death’s influence is spreading beyond the Ruptures that continue to plague the land, and with your help, Tyrael must investigate",
+      "evidenceHash": "a00fc8501ce24ae8ae7def9b9d42ef3dcaf630ce72f6e5fcefa4f0b1890554aa",
+      "reason": "No unambiguous season title",
+      "discoveredAt": "2026-11-25T21:39:20.848Z",
       "baseline": "00f81b3dc486f7316981772635456871399ff6afb1b5f4dfbe58ba9cdaa0e55d",
       "status": "pending"
     }
